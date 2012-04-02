@@ -55,6 +55,16 @@ class Api::UsersController < Api::ApiController
     render :json => @user
   end
 
+  api :desc => "Create a user",
+      :path => "/users/:id",
+      :method => "GET"
+  error :code => 401, :desc => "Unauthorized"
+  error :code => 404, :desc => "Not Found"
+  param :username, /\A[\w|_|-]+\Z/, :desc => "A non-space string with minimum length 3 and maximum 64", :required => true
+  param :password, String, :required => true
+  param :email, String
+  param :disabled, [true, false]
+  desc "ahoj"
   def create
     # warning - request already contains "username" and "password" (logged user)
     user = User.create!(:username => params[:username],

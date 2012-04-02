@@ -55,6 +55,8 @@ gem 'acts_as_reportable', '>=1.1.1'
 #   gem 'webrat'
 # end
 
+gem "restapi", :require => "restapi", :path => "~/Projects/rails-restapi"
+
 group :test, :development do
   # To use debugger
   gem 'ruby-debug'
