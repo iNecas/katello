@@ -28,10 +28,23 @@ class Api::SyncController < Api::ApiController
     }
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :GET, "/organizations/:organization_id/products/:product_id/sync", "List sync"
+  api :GET, "/providers/:provider_id/sync", "List sync"
+  api :GET, "/repositories/:repository_id/sync", "List sync"
+  param :repository_id, :number
   def index
     render :json => @obj.sync_status
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :POST, "/organizations/:organization_id/products/:product_id/sync", "Create a sync"
+  api :POST, "/providers/:provider_id/sync", "Create a sync"
+  api :POST, "/repositories/:repository_id/sync", "Create a sync"
+  param :organization_id, :identifier
+  param :product_id, :number
+  param :provider_id, :number
+  param :repository_id, :number
   def create
     to_return = @obj.sync
     render :json => to_return, :status => 202

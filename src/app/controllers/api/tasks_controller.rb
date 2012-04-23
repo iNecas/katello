@@ -40,6 +40,9 @@ class Api::TasksController < Api::ApiController
     render :json => TaskStatus.where(:organization_id => @organization).to_json(:except => :id)
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :GET, "/tasks/:id", "Show a task"
+  param :id, :identifier, :required => true
   def show
     render :json => @task.refresh.to_json(:except => :id)
   end

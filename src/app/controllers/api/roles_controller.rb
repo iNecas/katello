@@ -41,6 +41,9 @@ class Api::RolesController < Api::ApiController
      }
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :GET, "/roles", "List roles"
+  param :name, String
   def index
     render :json => (Role.readable.non_self.where query_params).to_json
   end
@@ -49,21 +52,40 @@ class Api::RolesController < Api::ApiController
     render :json => @role
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :POST, "/roles", "Create a role"
+  param :role, Hash do
+    param :description, String, :allow_nil => true
+    param :name, String
+  end
   def create
     render :json => Role.create!(params[:role]).to_json
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :PUT, "/roles/:id", "Update a role"
+  param :id, :number, :required => true
+  param :role, Hash do
+    param :description, String
+    param :name, String
+  end
   def update
     @role.update_attributes!(params[:role])
     @role.save!
     render :json => @role
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :DELETE, "/roles/:id", "Destroy a role"
+  param :id, :number, :required => true
   def destroy
     @role.destroy
     render :text => _("Deleted role '#{params[:id]}'"), :status => 200
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :GET, "/roles/available_verbs", "TODO: Describe API"
+  param :organization_id, :identifier
   def available_verbs
     details= {}
  

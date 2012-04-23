@@ -47,6 +47,13 @@ class Api::EnvironmentsController < Api::ApiController
     }
   end
 
+
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :GET, "/organizations/:organization_id/environments", "List environments"
+  api :GET, "/owners/:organization_id/environments", "List environments"
+  param :library, String
+  param :name, String
+  param :organization_id, :identifier, :required => true
   def index
     query_params[:organization_id] = @organization.id
      environments = KTEnvironment.where query_params
@@ -62,6 +69,13 @@ class Api::EnvironmentsController < Api::ApiController
     render :json => @environment
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :POST, "/organizations/:organization_id/environments", "Create an environment"
+  param :environment, Hash do
+    param :name, String
+    param :prior, Fixnum
+  end
+  param :organization_id, :identifier, :required => true
   def create
     environment = KTEnvironment.new(params[:environment])
     @organization.environments << environment
@@ -70,6 +84,15 @@ class Api::EnvironmentsController < Api::ApiController
     render :json => environment
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :PUT, "/environments/:id", "Update an environment"
+  api :PUT, "/organizations/:organization_id/environments/:id", "Update an environment"
+  param :environment, Hash do
+    param :description, String
+    param :name, String
+  end
+  param :id, :number, :required => true
+  param :organization_id, :identifier
   def update
     if @environment.library?
       raise HttpErrors::BadRequest, _("Can't update Library environment")
@@ -79,6 +102,11 @@ class Api::EnvironmentsController < Api::ApiController
     end
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :DELETE, "/environments/:id", "Destroy an environment"
+  api :DELETE, "/organizations/:organization_id/environments/:id", "Destroy an environment"
+  param :id, :number, :required => true
+  param :organization_id, :identifier
   def destroy
     if @environment.confirm_last_env
       @environment.destroy
@@ -89,6 +117,11 @@ class Api::EnvironmentsController < Api::ApiController
     end
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :GET, "/organizations/:organization_id/environments/:id/repositories", "TODO: Describe API"
+  param :id, :number, :required => true
+  param :include_disabled, String
+  param :organization_id, :identifier, :required => true
   def repositories
     render :json => @environment.products.all_readable(@organization).collect { |p| p.repos(@environment, query_params[:include_disabled]) }.flatten
   end

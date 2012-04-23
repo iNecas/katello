@@ -40,10 +40,22 @@ class Api::ProductsController < Api::ApiController
     }
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :GET, "/organizations/:organization_id/products/:id", "Show a product"
+  param :id, :identifier, :required => true
+  param :organization_id, :identifier, :required => true
   def show
     render :json => @product.to_json
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :PUT, "/organizations/:organization_id/products/:id", "Update a product"
+  param :id, :number, :required => true
+  param :organization_id, :identifier, :required => true
+  param :product, Hash do
+    param :gpg_key_name, String
+    param :recursive, :bool
+  end
   def update
     raise HttpErrors::BadRequest, _("It is not allowed to update a Red Hat product.") if @product.redhat?
     @product.update_attributes!(params[:product].slice(:description, :gpg_key_name))
@@ -53,6 +65,12 @@ class Api::ProductsController < Api::ApiController
     render :json => @product.to_json
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :GET, "/environments/:environment_id/products", "List products"
+  api :GET, "/organizations/:organization_id/products", "List products"
+  param :environment_id, :number
+  param :name, String
+  param :organization_id, :identifier
   def index
     query_params.delete(:organization_id)
     query_params.delete(:environment_id)
@@ -67,21 +85,43 @@ class Api::ProductsController < Api::ApiController
     render :json => products.select("products.*, providers.name AS provider_name").joins(:provider).where(query_params).all
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :DELETE, "/organizations/:organization_id/products/:id", "Destroy a product"
+  param :id, :number, :required => true
+  param :organization_id, :identifier, :required => true
   def destroy
     @product.destroy
     render :text => _("Deleted product '#{params[:id]}'"), :status => 200
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :GET, "/environments/:environment_id/products/:id/repositories", "TODO: Describe API"
+  api :GET, "/organizations/:organization_id/products/:id/repositories", "TODO: Describe API"
+  api :GET, "/organizations/:organization_id/products/:id/repositories", "TODO: Describe API"
+  param :environment_id, :number
+  param :id, :number, :required => true
+  param :include_disabled, String
+  param :name, String
+  param :organization_id, :identifier
   def repositories
     render :json => @product.repos(@environment, query_params[:include_disabled]).where(query_params.slice(:name))
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :POST, "/organizations/:organization_id/products/:id/sync_plan", "TODO: Describe API"
+  param :id, :number, :required => true
+  param :organization_id, :identifier, :required => true
+  param :plan_id, :number
   def set_sync_plan
     @product.sync_plan = SyncPlan.find(params[:plan_id])
     @product.save!
     render :text => _("Synchronization plan assigned."), :status => 200
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :DELETE, "/organizations/:organization_id/products/:id/sync_plan", "TODO: Describe API"
+  param :id, :number, :required => true
+  param :organization_id, :identifier, :required => true
   def remove_sync_plan
     @product.sync_plan = nil
     @product.save!

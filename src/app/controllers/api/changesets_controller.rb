@@ -32,16 +32,31 @@ class Api::ChangesetsController < Api::ApiController
 
   respond_to :json
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :GET, "/organizations/:organization_id/environments/:environment_id/changesets", "List changesets"
+  param :environment_id, :number, :required => true
+  param :name, String
+  param :organization_id, :identifier, :required => true
   def index
     render :json => Changeset.select("changesets.*, environments.name AS environment_name").
         joins(:environment).where(params.slice(:name, :environment_id))
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :GET, "/changesets/:id", "Show a changeset"
+  param :id, :number, :required => true
   def show
     render :json => @changeset.to_json(:include => [:products, :packages, :errata, :repos, :system_templates,
                                                     :distributions])
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :PUT, "/changesets/:id", "Update a changeset"
+  param :changeset, Hash do
+    param :description, String
+    param :name, String
+  end
+  param :id, :number, :required => true
   def update
     @changeset.attributes = params[:changeset].slice(:name, :description)
     @changeset.save!
@@ -53,6 +68,14 @@ class Api::ChangesetsController < Api::ApiController
     render :json => @changeset.calc_dependencies.to_json
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :POST, "/organizations/:organization_id/environments/:environment_id/changesets", "Create a changeset"
+  param :changeset, Hash do
+    param :description, String, :allow_nil => true
+    param :name, String
+  end
+  param :environment_id, :number, :required => true
+  param :organization_id, :identifier, :required => true
   def create
     @changeset             = Changeset.new(params[:changeset])
     @changeset.environment = @environment
@@ -61,6 +84,9 @@ class Api::ChangesetsController < Api::ApiController
     render :json => @changeset
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :POST, "/changesets/:id/promote", "TODO: Describe API"
+  param :id, :number, :required => true
   def promote
     @changeset.state = Changeset::REVIEW
     @changeset.save!

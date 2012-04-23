@@ -34,12 +34,21 @@ class Api::ChangesetsContentController < Api::ApiController
     }
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :POST, "/changesets/:changeset_id/products", "TODO: Describe API"
+  param :changeset_id, :number, :required => true
+  param :product_id, :number
   def add_product
     product = Product.find_by_cp_id!(params[:product_id])
     @changeset.add_product! product
     render :text => _("Added product '#{product.name}'"), :status => 200
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :DELETE, "/changesets/:changeset_id/products/:id", "TODO: Describe API"
+  param :changeset_id, :number, :required => true
+  param :content_id, :number
+  param :id, :number, :required => true
   def remove_product
     product = Product.find_by_cp_id!(params[:id])
     render_after_removal @changeset.remove_product!(product),
@@ -47,12 +56,23 @@ class Api::ChangesetsContentController < Api::ApiController
                          :not_found => _("Product #{params[:id]} not found in the changeset.")
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :POST, "/changesets/:changeset_id/packages", "TODO: Describe API"
+  param :changeset_id, :number, :required => true
+  param :name, String
+  param :product_id, :number
   def add_package
     product = Product.find_by_cp_id!(params[:product_id])
     @changeset.add_package!(params[:name], product)
     render :text => _("Added package '#{params[:name]}'"), :status => 200
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :DELETE, "/changesets/:changeset_id/packages/:id", "TODO: Describe API"
+  param :changeset_id, :number, :required => true
+  param :content_id, String
+  param :id, String, :required => true
+  param :product_id, :number
   def remove_package
     product = Product.find_by_cp_id!(params[:product_id])
     render_after_removal @changeset.remove_package!(params[:id], product),
@@ -60,12 +80,23 @@ class Api::ChangesetsContentController < Api::ApiController
                          :not_found => _("Package '#{params[:id]}' not found in the changeset")
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :POST, "/changesets/:changeset_id/errata", "TODO: Describe API"
+  param :changeset_id, :number, :required => true
+  param :erratum_id, String
+  param :product_id, :number
   def add_erratum
     product = Product.find_by_cp_id!(params[:product_id])
     @changeset.add_erratum!(params[:erratum_id], product)
     render :text => _("Added erratum '#{params[:erratum_id]}'"), :status => 200
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :DELETE, "/changesets/:changeset_id/errata/:id", "TODO: Describe API"
+  param :changeset_id, :number, :required => true
+  param :content_id, String
+  param :id, String, :required => true
+  param :product_id, :number
   def remove_erratum
     product = Product.find_by_cp_id!(params[:product_id])
     render_after_removal @changeset.remove_erratum!(params[:id], product),
@@ -73,12 +104,23 @@ class Api::ChangesetsContentController < Api::ApiController
                          :not_found => _("Erratum '#{params[:id]}' not found in the changeset")
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :POST, "/changesets/:changeset_id/repositories", "TODO: Describe API"
+  param :changeset_id, :number, :required => true
+  param :product_id, :number
+  param :repository_id, :number
   def add_repo
     repository = Repository.find(params[:repository_id])
     @changeset.add_repository!(repository)
     render :text => _("Added repository '#{repository.name}'"), :status => 200
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :DELETE, "/changesets/:changeset_id/repositories/:id", "TODO: Describe API"
+  param :changeset_id, :number, :required => true
+  param :content_id, :number
+  param :id, :number, :required => true
+  param :product_id, :number
   def remove_repo
     repository = Repository.find(params[:id])
     render_after_removal @changeset.remove_repository!(repository),
@@ -86,12 +128,21 @@ class Api::ChangesetsContentController < Api::ApiController
                          :not_found => _("Repository '#{params[:id]}' not found in the changeset")
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :POST, "/changesets/:changeset_id/templates", "TODO: Describe API"
+  param :changeset_id, :number, :required => true
+  param :template_id, :number
   def add_template
     template = SystemTemplate.find(params[:template_id])
     @changeset.add_template!(template)
     render :text => _("Added template '#{template.name}'"), :status => 200
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :DELETE, "/changesets/:changeset_id/templates/:id", "TODO: Describe API"
+  param :changeset_id, :number, :required => true
+  param :content_id, :number
+  param :id, :number, :required => true
   def remove_template
     template = SystemTemplate.find(params[:id])
     render_after_removal @changeset.remove_template!(template),

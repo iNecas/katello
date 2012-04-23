@@ -36,6 +36,10 @@ class Api::SyncPlansController < Api::ApiController
     }
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :GET, "/organizations/:organization_id/sync_plans", "List sync_plans"
+  param :name, String
+  param :organization_id, :identifier, :required => true
   def index
     query_params.delete :organization_id
     render :json => @organization.sync_plans.where(query_params).to_json
@@ -45,6 +49,15 @@ class Api::SyncPlansController < Api::ApiController
     render :json => @plan.to_json
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :POST, "/organizations/:organization_id/sync_plans", "Create a sync_plan"
+  param :organization_id, :identifier, :required => true
+  param :sync_plan, Hash do
+    param :description, String
+    param :interval, String
+    param :name, String
+    param :sync_date, Time
+  end
   def create
     sync_date = params[:sync_plan][:sync_date]
     if not sync_date.kind_of? Time
@@ -55,6 +68,16 @@ class Api::SyncPlansController < Api::ApiController
     render :json => SyncPlan.create!(params[:sync_plan]).to_json
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :PUT, "/organizations/:organization_id/sync_plans/:id", "Update a sync_plan"
+  param :id, :number, :required => true
+  param :organization_id, :identifier, :required => true
+  param :sync_plan, Hash do
+    param :description, String
+    param :interval, String
+    param :name, String
+    param :sync_date, Time
+  end
   def update
     sync_date = params[:sync_plan][:sync_date]
     if not sync_date.nil? and not sync_date.kind_of? Time
@@ -67,6 +90,10 @@ class Api::SyncPlansController < Api::ApiController
     render :json => @plan
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :DELETE, "/organizations/:organization_id/sync_plans/:id", "Destroy a sync_plan"
+  param :id, :number, :required => true
+  param :organization_id, :identifier, :required => true
   def destroy
     @plan.destroy
     render :text => _("Deleted sync plan '#{params[:id]}'"), :status => 200

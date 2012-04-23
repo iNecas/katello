@@ -20,6 +20,10 @@ class Api::UebercertsController < Api::ApiController
     { :show => read_test }
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :GET, "/organizations/:organization_id/uebercert", "Show an uebercert"
+  param :organization_id, :identifier, :required => true
+  param :regenerate, String
   def show
     @organization.generate_debug_cert if params[:regenerate] == 'True'
     render :json => @organization.debug_cert

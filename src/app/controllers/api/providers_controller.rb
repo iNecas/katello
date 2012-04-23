@@ -45,6 +45,10 @@ class Api::ProvidersController < Api::ApiController
     }
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :GET, "/organizations/:organization_id/providers", "List providers"
+  param :name, String
+  param :organization_id, :identifier, :required => true
   def index
     query_params.delete(:organization_id)
     render :json => (Provider.readable(@organization).where query_params).to_json
@@ -54,6 +58,15 @@ class Api::ProvidersController < Api::ApiController
     render :json => @provider.to_json
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :POST, "/providers", "Create a provider"
+  param :organization_id, :identifier
+  param :provider, Hash do
+    param :description, String, :allow_nil => true
+    param :name, String
+    param :provider_type, String
+    param :repository_url, String
+  end
   def create
     provider = Provider.create!(params[:provider]) do |p|
       p.organization = @organization
@@ -61,11 +74,20 @@ class Api::ProvidersController < Api::ApiController
     render :json => provider.to_json and return
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :PUT, "/providers/:id", "Update a provider"
+  param :id, :number, :required => true
+  param :provider, Hash do
+    param :repository_url, String
+  end
   def update
     @provider.update_attributes!(params[:provider])
     render :json => @provider.to_json and return
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :DELETE, "/providers/:id", "Destroy a provider"
+  param :id, :number, :required => true
   def destroy
     @provider.destroy
     if @provider.destroyed?
@@ -75,10 +97,18 @@ class Api::ProvidersController < Api::ApiController
     end
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :GET, "/providers/:id/products", "TODO: Describe API"
+  param :id, :number, :required => true
   def products
     render :json => @provider.products.all_readable(@provider.organization).select("products.*, providers.name AS provider_name").joins(:provider).to_json
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :POST, "/providers/:id/import_manifest", "TODO: Describe API"
+  param :force, String
+  param :id, :number, :required => true
+  param :import, ActionDispatch::Http::UploadedFile
   def import_manifest
     if @provider.yum_repo?
       raise HttpErrors::BadRequest, _("It is not allowed to import manifest for a custom provider.")
@@ -95,6 +125,9 @@ class Api::ProvidersController < Api::ApiController
     render :text => "Manifest imported", :status => 200
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :POST, "/providers/:id/refresh_products", "TODO: Describe API"
+  param :id, :number, :required => true
   def refresh_products
     raise HttpErrors::BadRequest, _("It is not allowed to refresh products for custom provider.") unless @provider.redhat_provider?
 
@@ -113,6 +146,14 @@ class Api::ProvidersController < Api::ApiController
     render :json => results.to_json
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :POST, "/providers/:id/product_create", "TODO: Describe API"
+  param :id, :number, :required => true
+  param :product, Hash do
+    param :description, :bool, :allow_nil => true
+    param :gpg_key_name, String, :allow_nil => true
+    param :name, String
+  end
   def product_create
     raise HttpErrors::BadRequest, _("It is not allowed to create products in Red Hat provider.") if @provider.redhat_provider?
 

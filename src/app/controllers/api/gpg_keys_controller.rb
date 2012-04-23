@@ -40,25 +40,49 @@ class Api::GpgKeysController < Api::ApiController
     }
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :GET, "/organizations/:organization_id/gpg_keys", "List gpg_keys"
+  param :name, String
+  param :organization_id, :identifier, :required => true
   def index
     gpg_keys = @organization.gpg_keys.where(params.slice(:name))
     render :json => gpg_keys, :only => [:id, :name]
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :GET, "/gpg_keys/:id", "Show a gpg_key"
+  param :id, :number, :required => true
   def show
     render :json => @gpg_key, :details => true
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :POST, "/organizations/:organization_id/gpg_keys", "Create a gpg_key"
+  param :gpg_key, Hash do
+    param :content, String
+    param :name, String
+  end
+  param :organization_id, :identifier, :required => true
   def create
     gpg_key = @organization.gpg_keys.create!(params[:gpg_key].slice(:name, :content))
     render :json => gpg_key
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :PUT, "/gpg_keys/:id", "Update a gpg_key"
+  param :gpg_key, Hash do
+    param :content, String
+    param :name, String
+  end
+  param :id, :number, :required => true
   def update
     @gpg_key.update_attributes!(params[:gpg_key].slice(:name, :content))
     render :json => @gpg_key
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :DELETE, "/gpg_keys/:id", "Destroy a gpg_key"
+  param :id, :number, :required => true
   def destroy
     @gpg_key.destroy
     render :text => _("Deleted GPG key '#{params[:id]}'"), :status => 204

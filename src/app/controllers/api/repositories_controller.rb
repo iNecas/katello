@@ -48,6 +48,13 @@ class Api::RepositoriesController < Api::ApiController
     }
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :POST, "/repositories", "Create a repository"
+  param :gpg_key_name, String
+  param :name, String
+  param :organization_id, :identifier
+  param :product_id, :number
+  param :url, String
   def create
     raise HttpErrors::BadRequest, _('Invalid Url') if !kurl_valid?(params[:url])
 
@@ -60,16 +67,28 @@ class Api::RepositoriesController < Api::ApiController
     render :json => content
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :GET, "/repositories/:id", "Show a repository"
+  param :id, :number, :required => true
   def show
     render :json => @repository.to_hash
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :PUT, "/repositories/:id", "Update a repository"
+  param :id, :number, :required => true
+  param :repository, Hash do
+    param :gpg_key_name, String
+  end
   def update
     raise HttpErrors::BadRequest, _("It is not allowed to update a Red Hat repository.") if @repository.redhat?
     @repository.update_attributes!(params[:repository].slice(:gpg_key_name))
     render :json => @repository.to_hash
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :DELETE, "/repositories/:id", "Destroy a repository"
+  param :id, :number, :required => true
   def destroy
     raise HttpErrors::BadRequest, _("Repositories can be deleted only in Library environment.") if not @repository.environment.library?
 
@@ -77,6 +96,10 @@ class Api::RepositoriesController < Api::ApiController
     render :text => _("Deleted repository '#{params[:id]}'"), :status => 200
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :POST, "/repositories/:id/enable", "TODO: Describe API"
+  param :enable, :bool
+  param :id, :number, :required => true
   def enable
     raise HttpErrors::NotFound, _("Disable/enable is not supported for custom repositories.") if not @repository.redhat?
 
@@ -97,6 +120,10 @@ class Api::RepositoriesController < Api::ApiController
   # Pulp blocks during the execution of this call, so *DO NOT* try to
   # talk back to pulp within it.  Save that for the delayed job
   # pulp doesn't send correct headers'
+  # UPDATED API DOC
+  api :POST, "/repositories/sync_complete", "TODO: Describe API"
+  param :repo_id, String
+  param :task_id, String
   def sync_complete
     remote_ip = request.remote_ip
     forwarded = request.env["HTTP_X_FORWARDED_FOR"]
@@ -117,6 +144,11 @@ class Api::RepositoriesController < Api::ApiController
   end
 
   # proxy repository discovery call to pulp, so we don't have to create an async task to keep track of async task on pulp side
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :POST, "/organizations/:organization_id/repositories/discovery", "TODO: Describe API"
+  param :organization_id, :identifier, :required => true
+  param :type, String
+  param :url, String
   def discovery
     pulp_task = Resources::Pulp::Repository.start_discovery(params[:url], params[:type])
     task = PulpSyncStatus.using_pulp_task(pulp_task) {|t| t.organization = @organization}
@@ -124,6 +156,10 @@ class Api::RepositoriesController < Api::ApiController
     render :json => task
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :GET, "/repositories/:id/package_groups", "TODO: Describe API"
+  param :group_id, :identifier
+  param :id, :number, :required => true
   def package_groups
     #translate group_id to id in search params (conflict with repo id used for routing)
     search_attrs = params.slice(:name)
@@ -132,6 +168,10 @@ class Api::RepositoriesController < Api::ApiController
     render :json => @repository.package_groups(search_attrs)
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :GET, "/repositories/:id/package_group_categories", "TODO: Describe API"
+  param :category_id, :identifier
+  param :id, :number, :required => true
   def package_group_categories
     #translate category_id to id in search params (conflict with repo id used for routing)
     search_attrs = params.slice(:name)

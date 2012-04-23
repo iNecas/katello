@@ -41,6 +41,13 @@ class Api::ActivationKeysController < Api::ApiController
   end
 
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :GET, "/activation_keys", "List activation_keys"
+  api :GET, "/environments/:environment_id/activation_keys", "List activation_keys"
+  api :GET, "/organizations/:organization_id/activation_keys", "List activation_keys"
+  param :environment_id, :number
+  param :name, String
+  param :organization_id, :identifier
   def index
     query_params[:organization_id] = @organization.id unless @organization.nil?
     query_params[:environment_id] = @environment.id unless @environment.nil?
@@ -52,6 +59,14 @@ class Api::ActivationKeysController < Api::ApiController
     render :json => @activation_key
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :POST, "/activation_keys", "Create an activation_key"
+  api :POST, "/environments/:environment_id/activation_keys", "Create an activation_key"
+  param :activation_key, Hash do
+    param :description, String, :allow_nil => true
+    param :name, String
+  end
+  param :environment_id, :number
   def create
     created = ActivationKey.create!(params[:activation_key]) do |ak|
       ak.environment = @environment
@@ -79,6 +94,9 @@ class Api::ActivationKeysController < Api::ApiController
     render :json => @activation_key
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :DELETE, "/activation_keys/:id", "Destroy an activation_key"
+  param :id, :number, :required => true
   def destroy
     @activation_key.destroy
    render :text => _("Deleted activation key '#{params[:id]}'"), :status => 204

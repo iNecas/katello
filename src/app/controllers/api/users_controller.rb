@@ -47,6 +47,10 @@ class Api::UsersController < Api::ApiController
     }
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :GET, "/users", "List users"
+  api :GET, "/users/:user_id/roles", "List users"
+  param :username, String
   def index
     render :json => (User.readable.where query_params).to_json
   end
@@ -55,16 +59,13 @@ class Api::UsersController < Api::ApiController
     render :json => @user
   end
 
-  api :desc => "Create a user",
-      :path => "/users/:id",
-      :method => "GET"
-  error :code => 401, :desc => "Unauthorized"
-  error :code => 404, :desc => "Not Found"
-  param :username, /\A[\w|_|-]+\Z/, :desc => "A non-space string with minimum length 3 and maximum 64", :required => true
-  param :password, String, :required => true
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :POST, "/users", "Create an user"
+  api :POST, "/users/:user_id/roles", "Create an user"
+  param :disabled, :bool
   param :email, String
-  param :disabled, [true, false]
-  desc "ahoj"
+  param :password, String
+  param :username, String
   def create
     # warning - request already contains "username" and "password" (logged user)
     user = User.create!(:username => params[:username],
@@ -87,6 +88,10 @@ class Api::UsersController < Api::ApiController
     render :json => @user.to_json
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :DELETE, "/users/:id", "Destroy an user"
+  api :DELETE, "/users/:user_id/roles/:id", "Destroy an user"
+  param :id, :number, :required => true
   def destroy
     @user.destroy
     render :text => _("Deleted user '#{params[:id]}'"), :status => 200
@@ -132,6 +137,9 @@ class Api::UsersController < Api::ApiController
   end
 
   # rhsm
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :GET, "/users/:username/owners", "TODO: Describe API"
+  param :username, String, :required => true
   def list_owners
     orgs = @user.allowed_organizations
     # rhsm expects owner (Candlepin format)
@@ -151,5 +159,4 @@ class Api::UsersController < Api::ApiController
     raise HttpErrors::NotFound, _("Couldn't find user '#{params[:username]}'") if @user.nil?
     @user
   end
-
 end
