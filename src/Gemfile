@@ -1,6 +1,7 @@
 
 #source "http://rubygems.org"
 source 'http://repos.fedorapeople.org/repos/katello/gems/'
+source 'http://inecas.fedorapeople.org/rubygems/'
 
 gem 'rails', '3.0.10'
 gem 'thin', '>=1.2.11'
@@ -55,7 +56,8 @@ gem 'acts_as_reportable', '>=1.1.1'
 #   gem 'webrat'
 # end
 
-gem "restapi", :require => "restapi", :path => "~/Projects/rails-restapi"
+gem "restapi", '0.0.3.kt'
+#gem "restapi", :require => "restapi", :path => "~/Projects/rails-restapi"
 
 group :test, :development do
   # To use debugger
