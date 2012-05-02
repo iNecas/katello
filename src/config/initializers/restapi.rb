@@ -53,7 +53,7 @@ end
 class BooleanValidator < Restapi::Validator::BaseValidator
 
   def validate(value)
-    [true, false].include?(value)
+    %w[true false].include?(value.to_s)
   end
 
   def self.build(param_description, argument, options, block)
