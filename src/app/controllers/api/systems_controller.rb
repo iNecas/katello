@@ -143,7 +143,7 @@ class Api::SystemsController < Api::ApiController
   api :PUT, "/systems/:id", "Update a system"
   param :description, String
   param :facts, Hash
-  param :id, :identifier
+  param :id, :identifier, :required => true
   param :location, String
   param :name, String
   param :releaseVer, String

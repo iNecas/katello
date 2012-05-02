@@ -122,8 +122,8 @@ class Api::RepositoriesController < Api::ApiController
   # pulp doesn't send correct headers'
   # UPDATED API DOC
   api :POST, "/repositories/sync_complete", "TODO: Describe API"
-  param :repo_id, String
-  param :task_id, String
+  param :repo_id, String, :required => true
+  param :task_id, String, :required => true
   def sync_complete
     remote_ip = request.remote_ip
     forwarded = request.env["HTTP_X_FORWARDED_FOR"]
