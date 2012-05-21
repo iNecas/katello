@@ -5,7 +5,7 @@ Restapi.configure do |config|
   config.api_base_url = "/api"
   config.api_controllers_matcher = "#{Rails.root}/app/controllers/api/*.rb"
   config.doc_base_url = "/apidoc"
-  config.validate = true
+  config.validate = false
 end
 
 class NumberValidator < Restapi::Validator::BaseValidator
