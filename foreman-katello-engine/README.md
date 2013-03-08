@@ -24,7 +24,7 @@ model to model Katello entities.
 Modified functionality
 ----------------------
 
-## Host Group forms
+### Host Group forms
 
 New tab 'Katello' is added to the host groups form, exposing a select
 box for katello environment and activation keys.
@@ -53,6 +53,24 @@ template like other parameters.
 The activation keys are autocompleted for better user experience and
 the list of products for each used activation key is displayed at the
 bottom of the Katello tab.
+
+### Katello-friendly provisioning
+
+To register a provisioned system to katello a new provisioning
+template snippet needs to be crated, lets call it katello:
+
+```
+<% if @host.params['kt_activation_keys'] %>
+rpm -ivh "http://katello.example.com/pub/candlepin-cert-consumer-katello.example.com-1.0-1.noarch.rpm"
+subscription-manager register --org "<%= @host.params['kt_org'] %>" --activationkey "<%= @host.params['kt_activation_keys'] %>"
+<% end %>
+```
+
+and reference it from the kickstart template:
+
+```
+<%= snippets "katello" %>
+```
 
 Current status
 --------------
