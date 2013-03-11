@@ -1,11 +1,28 @@
 <%= javascript_tag do %>
 
 $(function() {
-    var KT_AK_LABEL = "<%= kt_ak_label %>"
-    var availableActivationKeys = $.parseJSON('{' +
-                                              '"rhel6selfservice": ["Red Hat Enterprise Linux 6 Server Self-Service"],' +
-                                              '"katello-and-friends": ["Katello", "Pulp", "Candlepin", "Foreman"],' +
-                                              '"headpin-and-friends": ["Headpin", "Thumbslug", "Candlepin"] }');
+    var KT_AK_LABEL = "<%= kt_ak_label %>";
+    var availableActivationKeys = {};
+
+    function ktLoadActivationKeys() {
+        var url = '/activation_keys';
+        var environmentId = $("#kt_environment_id").val();
+        if(environmentId) {
+            $.ajax({
+                type: 'get',
+                url:  url,
+                data:'environment_id=' + environmentId,
+                success: function(response) {
+                    availableActivationKeys = response;
+                    ktAkUpdateSubscriptionsInfo();
+
+                }
+            });
+        } else {
+            availableActivationKeys = {};
+            ktAkUpdateSubscriptionsInfo();
+        }
+    }
 
     function ktFindParamContainer(name){
         var ret;
@@ -136,7 +153,7 @@ $(function() {
         ktSetParam(KT_AK_LABEL, ktActivationKeysValue);
     }
 
-    function ktAkUpdateubscriptionsInfo() {
+    function ktAkUpdateSubscriptionsInfo() {
         var subsInfo = $("ul#ak-subscriptions-info");
         subsInfo.empty();
         var selectedKeys = $("#kt_activation_keys").val().split(/,\s*/);
@@ -155,8 +172,8 @@ $(function() {
     function ktOnLoad() {
         ktHideParams();
         ktParamToAkInput();
-        ktAkUpdateubscriptionsInfo();
         ktOrganizationsToKtEnv();
+        ktLoadActivationKeys();
     };
 
     function ktOnSubmit() {
@@ -191,17 +208,21 @@ $(function() {
         select: function(event, ui) {
             var oldTerms = this.value.replace(/[^, ][^,]*$/,"");
             this.value = oldTerms + ui.item.value;
-            ktAkUpdateubscriptionsInfo();
+            ktAkUpdateSubscriptionsInfo();
             return false;
         },
         close: function() {
-            ktAkUpdateubscriptionsInfo();
+            ktAkUpdateSubscriptionsInfo();
         }
 
     }).bind("focus", function(event) {
         if($(this)[0].value == "") {
 	    $(this).autocomplete( "search" );
         }});
+
+    $("#kt_environment_id").change(function () {
+        ktLoadActivationKeys();
+    });
 
 });
 
