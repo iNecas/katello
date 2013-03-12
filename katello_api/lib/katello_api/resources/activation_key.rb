@@ -11,7 +11,8 @@ module KatelloApi
       # @param [Hash] headers additional http headers
       def index(params = { }, headers = { })
         check_params params, :allowed => true, :method => __method__
-        url, params = fill_params_in_url "/api/activation_keys", params
+        # we don't use the default path here from apipie
+        url, params = fill_params_in_url "/api/environments/:environment_id/activation_keys", params
         call(:"get", url, params, headers)
       end
 
