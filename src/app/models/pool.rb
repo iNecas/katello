@@ -20,7 +20,7 @@ class Pool < ActiveRecord::Base
 
   # ActivationKey includes the Pool's json in its own'
   def as_json(*args)
-    {:cp_id => self.cp_id}
+    {:cp_id => self.cp_id, :subscription => self.product_name}
   end
 
   # If the pool_json is passed in, then candlepin is not hit again to fetch it. This is for the case where
