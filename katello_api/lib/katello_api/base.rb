@@ -16,7 +16,8 @@ module KatelloApi
             :password => config[:password],
             :oauth => config[:oauth],
             :headers => { :content_type => 'application/json',
-                           :accept => "application/json;version=#{API_VERSION}" }
+                          :accept => "application/json;version=#{API_VERSION}",
+                          'HTTP_KATELLO_USER' => 'admin' }
           }.merge(options))
       @config = config
     end
