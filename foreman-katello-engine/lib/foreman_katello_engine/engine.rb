@@ -4,6 +4,8 @@ module ForemanKatelloEngine
   class Engine < ::Rails::Engine
 
     initializer 'foreman_katello_engine.helper' do |app|
+      require 'foreman_katello_engine/bindings'
+      ForemanKatelloEngine::Bindings.initialize_settings
       ActionView::Base.send :include, ForemanKatelloEngine::HostsAndHostgroupsHelper
     end
 

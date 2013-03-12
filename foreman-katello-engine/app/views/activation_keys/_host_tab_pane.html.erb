@@ -5,6 +5,8 @@ $(function() {
     var availableActivationKeys = {};
 
     function ktLoadActivationKeys() {
+        $("#ak-subscriptions-info").hide();
+        $("#ak-subscriptions-spinner").show();
         var url = '/activation_keys';
         var environmentId = $("#kt_environment_id").val();
         if(environmentId) {
@@ -14,8 +16,12 @@ $(function() {
                 data:'environment_id=' + environmentId,
                 success: function(response) {
                     availableActivationKeys = response;
+                },
+                error: function(error) {
+                    $.jnotify("Error while loading activation keys from Katello", { type: "error", sticky: true });
+                },
+                complete: function() {
                     ktAkUpdateSubscriptionsInfo();
-
                 }
             });
         } else {
@@ -161,12 +167,18 @@ $(function() {
           if(availableActivationKeys[key]) {
             // hack to make it working with deface
             var ul = "<ul>", ul_end = "</ul>", li = "<li>", li_end = "</li>";
-            content = li + key + ul + li;
-            content += availableActivationKeys[key].join(li_end + li);
-            content += li_end + ul_end + li_end;
+            content = li + key + ul;
+            if(!availableActivationKeys[key].length == 0) {
+                content += li;
+                content += availableActivationKeys[key].join(li_end + li);
+                content += li_end;
+            }
+            content +=  ul_end + li_end;
             subsInfo.append(content);
           }
         });
+        $("#ak-subscriptions-info").show();
+        $("#ak-subscriptions-spinner").hide();
     }
 
     function ktOnLoad() {
@@ -220,8 +232,11 @@ $(function() {
 	    $(this).autocomplete( "search" );
         }});
 
-    $("#kt_environment_id").change(function () {
+    $("#kt_environment_id").change(ktLoadActivationKeys);
+
+    $("#ak_refresh_subscriptions").click(function () {
         ktLoadActivationKeys();
+        return false;
     });
 
 });
@@ -238,6 +253,12 @@ $(function() {
     <p><b>Subscriptions information based on selected activation keys:</b></p>
     <ul id="ak-subscriptions-info">
     </ul>
-    <p>Activation keys and subscriptions can be managed <b><a href="/katello" target="_blank">here</a></b></p>
+    <div id="ak-subscriptions-spinner" style="display: none">
+      <%= image_tag "spinner.gif" %>
+    </div>
+    <p>Activation keys and subscriptions can be managed
+      <b><a href="<%= Setting['katello_url'] %>/activation_keys" target="_blank">here</a></b>
+    </p>
+    <p><a href="" id="ak_refresh_subscriptions">Reload data from Katello</a></p>
   </div>
 </div>

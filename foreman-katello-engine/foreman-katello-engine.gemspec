@@ -10,5 +10,6 @@ Gem::Specification.new do |s|
   s.homepage = "http://katello.org"
   s.licenses = ["GPL-2"]
   s.require_paths = ["lib"]
+  s.add_dependency "katello_api"
   s.summary = "Katello specific parts of Foreman"
 end

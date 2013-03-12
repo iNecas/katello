@@ -92,7 +92,7 @@ class foreman::config {
                               -k foreman_url -v '${fqdn}'\
                               -k token_duration -v '60'\
                               -k manage_puppetca -v false\
-                              -k oauth_consumer_key -v '${foreman::oauth_consumer_key}'\
+                              -k oauth_consumer_key -v 'foreman'\
                               -k oauth_consumer_secret -v '${foreman::oauth_consumer_secret}'\
                               -k oauth_map_users -v '${foreman::oauth_map_users}'\
                               -k administrator -v '${foreman::administrator}'"
