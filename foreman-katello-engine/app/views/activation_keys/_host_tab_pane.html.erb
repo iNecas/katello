@@ -7,7 +7,7 @@ $(function() {
     function ktLoadActivationKeys() {
         $("#ak-subscriptions-info").hide();
         $("#ak-subscriptions-spinner").show();
-        var url = '/activation_keys';
+        var url = foreman_url('/activation_keys');
         var environmentId = $("#kt_environment_id").val();
         if(environmentId) {
             $.ajax({
