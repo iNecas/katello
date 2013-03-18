@@ -8,10 +8,9 @@ module KatelloApi
       # @param [Hash] params a hash of params to be passed to the service
       #
       # @param [Hash] headers additional http headers
-      def memory(params = { }, headers = { })
-        check_params params, :allowed => false, :method => __method__
-        url, params = fill_params_in_url "/api/status/memory", params
-        call(:"get", url, params, headers)
+      # @return [Array] First item: parsed data; second item: raw body
+      def memory(params = {}, headers = {})
+        perform_call(__method__, params, headers)
       end
 
     end

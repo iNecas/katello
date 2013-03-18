@@ -8,28 +8,25 @@ module KatelloApi
       # @param [Hash] params a hash of params to be passed to the service
       #
       # @param [Hash] headers additional http headers
-      def index(params = { }, headers = { })
-        check_params params, :allowed => false, :method => __method__
-        url, params = fill_params_in_url "/api/ping", params
-        call(:"get", url, params, headers)
+      # @return [Array] First item: parsed data; second item: raw body
+      def index(params = {}, headers = {})
+        perform_call(__method__, params, headers)
       end
 
       # @param [Hash] params a hash of params to be passed to the service
       #
       # @param [Hash] headers additional http headers
-      def status(params = { }, headers = { })
-        check_params params, :allowed => false, :method => __method__
-        url, params = fill_params_in_url "/api/status", params
-        call(:"get", url, params, headers)
+      # @return [Array] First item: parsed data; second item: raw body
+      def status(params = {}, headers = {})
+        perform_call(__method__, params, headers)
       end
 
       # @param [Hash] params a hash of params to be passed to the service
       #
       # @param [Hash] headers additional http headers
-      def version(params = { }, headers = { })
-        check_params params, :allowed => false, :method => __method__
-        url, params = fill_params_in_url "/api/version", params
-        call(:"get", url, params, headers)
+      # @return [Array] First item: parsed data; second item: raw body
+      def version(params = {}, headers = {})
+        perform_call(__method__, params, headers)
       end
 
     end

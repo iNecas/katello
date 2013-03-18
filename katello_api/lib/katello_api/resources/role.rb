@@ -6,67 +6,69 @@ module KatelloApi
       end
 
       # @param [Hash] params a hash of params to be passed to the service
-      # @option params [String] name 
+      # @option params [Object] user_id Part of +/api/users/:user_id/roles+ path
+      # @option params [String] name
       #
       # @param [Hash] headers additional http headers
-      def index(params = { }, headers = { })
-        check_params params, :allowed => true, :method => __method__
-        url, params = fill_params_in_url "/api/roles", params
-        call(:"get", url, params, headers)
+      # @return [Array] First item: parsed data; second item: raw body
+      def index(params = {}, headers = {})
+        perform_call(__method__, params, headers)
       end
 
       # @param [Hash] params a hash of params to be passed to the service
+      # @option params [Object] id Part of +/api/roles/:id+ path
+      # @option params [Object] user_id Part of +/api/users/:user_id/roles/:id+ path
       #
       # @param [Hash] headers additional http headers
-      def show(params = { }, headers = { })
-        check_params params, :allowed => false, :method => __method__
-        url, params = fill_params_in_url "/api/roles/:id", params
-        call(:"get", url, params, headers)
+      # @return [Array] First item: parsed data; second item: raw body
+      def show(params = {}, headers = {})
+        perform_call(__method__, params, headers)
       end
 
       # @param [Hash] params a hash of params to be passed to the service
-      # @option params [Hash] role 
-      #   allowed keys are: 
-      #   * description [String, nil],
-      #   * name [String],
+      # @option params [Object] user_id Part of +/api/users/:user_id/roles+ path
+      # @option params [Hash] role
+      #   allowed keys are:
+      #   * description [String, nil]
+      #   * name [String]
       #
       # @param [Hash] headers additional http headers
-      def create(params = { }, headers = { })
-        check_params params, :allowed => true, :method => __method__
-        url, params = fill_params_in_url "/api/roles", params
-        call(:"post", url, params, headers)
+      # @return [Array] First item: parsed data; second item: raw body
+      def create(params = {}, headers = {})
+        perform_call(__method__, params, headers)
       end
 
       # @param [Hash] params a hash of params to be passed to the service
-      # @option params [Hash] role 
-      #   allowed keys are: 
-      #   * description [String, nil],
-      #   * name [String],
+      # @option params [Object] id Part of +/api/roles/:id+ path
+      # @option params [Object] user_id Part of +/api/users/:user_id/roles/:id+ path
+      # @option params [Hash] role
+      #   allowed keys are:
+      #   * description [String, nil]
+      #   * name [String]
       #
       # @param [Hash] headers additional http headers
-      def update(params = { }, headers = { })
-        check_params params, :allowed => true, :method => __method__
-        url, params = fill_params_in_url "/api/roles/:id", params
-        call(:"put", url, params, headers)
+      # @return [Array] First item: parsed data; second item: raw body
+      def update(params = {}, headers = {})
+        perform_call(__method__, params, headers)
       end
 
       # @param [Hash] params a hash of params to be passed to the service
+      # @option params [Object] id Part of +/api/roles/:id+ path
+      # @option params [Object] user_id Part of +/api/users/:user_id/roles/:id+ path
       #
       # @param [Hash] headers additional http headers
-      def destroy(params = { }, headers = { })
-        check_params params, :allowed => false, :method => __method__
-        url, params = fill_params_in_url "/api/roles/:id", params
-        call(:"delete", url, params, headers)
+      # @return [Array] First item: parsed data; second item: raw body
+      def destroy(params = {}, headers = {})
+        perform_call(__method__, params, headers)
       end
 
       # @param [Hash] params a hash of params to be passed to the service
       # @option params [String] organization_id  with this option specified the listed tags are scoped to the organization. 
       #
       # @param [Hash] headers additional http headers
-      def available_verbs(params = { }, headers = { })
-        check_params params, :allowed => true, :method => __method__
-        url, params = fill_params_in_url "/api/roles/available_verbs", params
-        call(:"get", url, params, headers)
+      # @return [Array] First item: parsed data; second item: raw body
+      def available_verbs(params = {}, headers = {})
+        perform_call(__method__, params, headers)
       end
 
     end

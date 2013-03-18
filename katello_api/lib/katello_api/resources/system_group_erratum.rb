@@ -11,10 +11,9 @@ module KatelloApi
       # @option params [String] type  filter errata by type 
       #
       # @param [Hash] headers additional http headers
-      def index(params = { }, headers = { })
-        check_params params, :allowed => true, :method => __method__
-        url, params = fill_params_in_url "/api/organizations/:organization_id/system_groups/:system_group_id/errata", params
-        call(:"get", url, params, headers)
+      # @return [Array] First item: parsed data; second item: raw body
+      def index(params = {}, headers = {})
+        perform_call(__method__, params, headers)
       end
 
       # @param [Hash] params a hash of params to be passed to the service
@@ -23,10 +22,9 @@ module KatelloApi
       # @option params [String] system_group_id  system_group identifier 
       #
       # @param [Hash] headers additional http headers
-      def create(params = { }, headers = { })
-        check_params params, :allowed => true, :method => __method__
-        url, params = fill_params_in_url "/api/organizations/:organization_id/system_groups/:system_group_id/errata", params
-        call(:"post", url, params, headers)
+      # @return [Array] First item: parsed data; second item: raw body
+      def create(params = {}, headers = {})
+        perform_call(__method__, params, headers)
       end
 
     end

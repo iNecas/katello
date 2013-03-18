@@ -9,22 +9,20 @@ module KatelloApi
       # @option params [String] system_id  system uuid 
       #
       # @param [Hash] headers additional http headers
-      def index(params = { }, headers = { })
-        check_params params, :allowed => true, :method => __method__
-        url, params = fill_params_in_url "/api/systems/:system_id/subscriptions", params
-        call(:"get", url, params, headers)
+      # @return [Array] First item: parsed data; second item: raw body
+      def index(params = {}, headers = {})
+        perform_call(__method__, params, headers)
       end
 
       # @param [Hash] params a hash of params to be passed to the service
+      # @option params [String] system_id  system uuid 
       # @option params [String] pool  subscription pool uuid 
       # @option params [String] quantity  number of subscription to use 
-      # @option params [String] system_id  system uuid 
       #
       # @param [Hash] headers additional http headers
-      def create(params = { }, headers = { })
-        check_params params, :allowed => true, :method => __method__
-        url, params = fill_params_in_url "/api/systems/:system_id/subscriptions", params
-        call(:"post", url, params, headers)
+      # @return [Array] First item: parsed data; second item: raw body
+      def create(params = {}, headers = {})
+        perform_call(__method__, params, headers)
       end
 
       # @param [Hash] params a hash of params to be passed to the service
@@ -32,20 +30,18 @@ module KatelloApi
       # @option params [String] system_id  system uuid 
       #
       # @param [Hash] headers additional http headers
-      def destroy(params = { }, headers = { })
-        check_params params, :allowed => true, :method => __method__
-        url, params = fill_params_in_url "/api/systems/:system_id/subscriptions/:id", params
-        call(:"delete", url, params, headers)
+      # @return [Array] First item: parsed data; second item: raw body
+      def destroy(params = {}, headers = {})
+        perform_call(__method__, params, headers)
       end
 
       # @param [Hash] params a hash of params to be passed to the service
       # @option params [String] system_id  system uuid 
       #
       # @param [Hash] headers additional http headers
-      def destroy_all(params = { }, headers = { })
-        check_params params, :allowed => true, :method => __method__
-        url, params = fill_params_in_url "/api/systems/:system_id/subscriptions", params
-        call(:"delete", url, params, headers)
+      # @return [Array] First item: parsed data; second item: raw body
+      def destroy_all(params = {}, headers = {})
+        perform_call(__method__, params, headers)
       end
 
       # @param [Hash] params a hash of params to be passed to the service
@@ -53,10 +49,9 @@ module KatelloApi
       # @option params [String] system_id  system uuid 
       #
       # @param [Hash] headers additional http headers
-      def destroy_by_serial(params = { }, headers = { })
-        check_params params, :allowed => true, :method => __method__
-        url, params = fill_params_in_url "/api/systems/:system_id/subscriptions/serials/:serial_id", params
-        call(:"delete", url, params, headers)
+      # @return [Array] First item: parsed data; second item: raw body
+      def destroy_by_serial(params = {}, headers = {})
+        perform_call(__method__, params, headers)
       end
 
     end
