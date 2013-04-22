@@ -55,6 +55,16 @@ class Organization < ActiveRecord::Base
   validate :unique_name_and_label
   validates_with Validators::DefaultInfoNotBlankValidator, :attributes => :default_info
 
+  after_create do
+    begin
+      Headpin::Actions::OrgCreate.trigger(self)
+    rescue Exception => e
+      # TODO: notify the user about the fail, but don't break the
+      # orchestration with CP/Pulp - we can retrigger that later, not
+      # fatal
+    end
+  end
+
   if Katello.config.use_cp
     before_validation :create_label, :on => :create
 

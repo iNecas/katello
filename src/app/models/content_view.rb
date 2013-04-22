@@ -224,6 +224,14 @@ class ContentView < ActiveRecord::Base
       end
     end
 
+    begin
+      Katello::Actions::ContentViewPromote.trigger(self, from_env, to_env)
+    rescue Exception => e
+      # TODO: notify the user about the fail, but don't break the
+      # orchestration with CP/Pulp - we can retrigger that later, not
+      # fatal
+    end
+
     tasks
   end
 

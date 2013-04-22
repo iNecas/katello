@@ -74,6 +74,17 @@ class KTEnvironment < ActiveRecord::Base
   after_create :create_default_content_view_version
 
   after_destroy :unset_users_with_default
+
+  after_create do
+    begin
+      Katello::Actions::EnvCreate.trigger(self)
+    rescue Exception => e
+      # TODO: notify the user about the fail, but don't break the
+      # orchestration with CP/Pulp - we can retrigger that later, not
+      # fatal
+    end
+  end
+
    ERROR_CLASS_NAME = "Environment"
 
   def library?
