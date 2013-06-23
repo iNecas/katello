@@ -1,7 +1,14 @@
+require 'dynflow/web_console'
 
 Src::Application.routes.draw do
 
   apipie
+
+  dynflow_console = Dynflow::WebConsole.setup do
+    set :bus, Katello::Bus.persisted
+  end
+
+  mount dynflow_console => "/dynflow"
 
   resources :system_groups do
     collection do
