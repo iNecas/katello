@@ -262,6 +262,28 @@ ActiveRecord::Schema.define(:version => 20130613090036) do
   add_index "distributors", ["content_view_id"], :name => "index_distributors_on_content_view_id"
   add_index "distributors", ["environment_id"], :name => "index_distributors_on_environment_id"
 
+  create_table "dynflow_ar_persisted_plans", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "status"
+    t.text     "serialized_run_plan"
+    t.datetime "created_at",          :null => false
+    t.datetime "updated_at",          :null => false
+  end
+
+  add_index "dynflow_ar_persisted_plans", ["status"], :name => "index_dynflow_ar_persisted_plans_on_status"
+  add_index "dynflow_ar_persisted_plans", ["user_id"], :name => "index_dynflow_ar_persisted_plans_on_user_id"
+
+  create_table "dynflow_ar_persisted_steps", :force => true do |t|
+    t.integer  "persisted_plan_id"
+    t.text     "data"
+    t.string   "status"
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+  end
+
+  add_index "dynflow_ar_persisted_steps", ["persisted_plan_id"], :name => "index_dynflow_ar_persisted_steps_on_persisted_plan_id"
+  add_index "dynflow_ar_persisted_steps", ["status"], :name => "index_dynflow_ar_persisted_steps_on_status"
+
   create_table "environment_priors", :id => false, :force => true do |t|
     t.integer "environment_id"
     t.integer "prior_id",       :null => false
