@@ -75,7 +75,7 @@ Dir[File.expand_path('bundler.d/*.rb', File.dirname(__FILE__))].each do |bundle|
   self.instance_eval(Bundler.read_file(bundle), bundle)
 end
 
-#gem 'dynflow', '>= 0.1.0', :git => 'git://github.com/iNecas/dynflow'
-gem 'dynflow', :path => '/home/inecas/Projects/dynflow'
+gem 'dynflow', '>= 0.1.0', :git => 'git://github.com/iNecas/dynflow'
+
 gem 'sinatra' # we use the dynflow web console
 gem 'stomp'
