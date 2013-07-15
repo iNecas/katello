@@ -10,23 +10,20 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-
 module Actions
-  module Katello
-    module Candlepin
-      class ContentAddToProduct < Dynflow::Action
+  module Headpin
+    class ContentViewEnvironmentCreate < Dynflow::Action
 
-        input_format do
-          param :product_cp_id, String
-          param :content_created, Candlepin::ContentCreate.output
-        end
-
-        def run
-          Resources::Candlepin::Product.add_content(input['product_cp_id'],
-                                                    input['content_created']['cp_id'], true)
-        end
-
+      def plan(content_view_environment)
+        content_view_environment.save!
+        content_view = content_view_environment.content_view
+        plan_action(Candlepin::EnvironmentCreate,
+                    'organization_label' => content_view.organization.label,
+                    'cp_id' => content_view_environment.cp_id,
+                    'name' => content_view_environment.label,
+                    'description' => content_view.description)
       end
+
     end
   end
 end

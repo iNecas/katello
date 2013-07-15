@@ -18,7 +18,8 @@ module Glue::Candlepin::Environment
     base.send :include, InstanceMethods
 
     base.class_eval do
-      before_save :save_environment_orchestration
+      # NG_TODO: remove
+      #before_save :save_environment_orchestration
       before_destroy :destroy_environment_orchestration
     end
   end

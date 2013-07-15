@@ -20,8 +20,6 @@ class ContentViewVersion < ActiveRecord::Base
   has_many :environments, {:through      => :content_view_version_environments,
                            :class_name   => "KTEnvironment",
                            :inverse_of   => :content_view_versions,
-                           :before_add    => :add_environment,
-                           :after_remove => :remove_environment
                           }
 
   has_many :repositories, :dependent => :destroy
@@ -180,10 +178,12 @@ class ContentViewVersion < ActiveRecord::Base
 
   private
 
+  # NG_TODO: remove
   def add_environment(env)
     content_view.add_environment(env) if content_view.content_view_versions.in_environment(env).count == 0
   end
 
+  # NG_TODO: remove
   def remove_environment(env)
     content_view.remove_environment(env)  unless content_view.content_view_versions.in_environment(env).count > 1
   end

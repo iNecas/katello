@@ -31,8 +31,9 @@ module Actions
 
         def plan(input)
           content_created = plan_self(input)
-          Candlepin::ContentAddToProduct('product_cp_id' => input['product_cp_id'],
-                                         'content_created' => content_created.output)
+          plan_action(Candlepin::ContentAddToProduct,
+                      'product_cp_id' => input['product_cp_id'],
+                      'content_created' => content_created.output)
           # NG_TODO: Update library content_view environment to make
           # the repo available in there (after partha confirms it's
           # possible to do it?
@@ -48,6 +49,11 @@ module Actions
                                                          :type => "yum",
                                                          :vendor => Provider::CUSTOM)
           output['cp_id'] = content['id']
+        end
+
+        def finalize(*steps)
+          repo = Repository.find(input['repo_id'])
+          repo.update_attributes!(:content_id => output['cp_id'])
         end
 
       end

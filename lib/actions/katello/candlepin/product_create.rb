@@ -16,8 +16,9 @@ module Actions
       class ProductCreate < Dynflow::Action
 
         input_format do
-          param 'name', String
-          param 'multiplier', Integer
+          param :product_id, Integer
+          param :name, String
+          param :multiplier, Integer
         end
 
         output_format do
@@ -31,6 +32,11 @@ module Actions
                                                          :multiplier => input['multiplier'],
                                                          :attributes => cp_attributes)
           output['cp_id'] = product[:id]
+        end
+
+        def finalize(*steps)
+          product = Product.find(input['product_id'])
+          product.update_attributes!('cp_id' => output['cp_id'])
         end
 
       end

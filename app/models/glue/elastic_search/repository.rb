@@ -25,7 +25,8 @@ module Glue::ElasticSearch::Repository
         indexes :labels, :type => 'string', :index => :not_analyzed
       end
 
-      after_save :update_related_index
+      #NG_TODO: remove
+      #after_save :update_related_index
       before_destroy :clear_content_indices
     end
 

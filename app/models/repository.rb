@@ -276,6 +276,8 @@ class Repository < ActiveRecord::Base
 
   # NG_TODO: make sure it works and refactor
   def validate_label_name_uniqueness
+    # NG_TODO: this should be checked only on creation
+    return true unless self.new_record?
     is_dupe =  Repository.joins(:environment_product).where( :name=> self.name,
                                                              "environment_products.product_id" => self.id, "environment_products.environment_id"=> self.product.library.id).count > 0
     if is_dupe
@@ -288,6 +290,7 @@ class Repository < ActiveRecord::Base
         raise Errors::ConflictException.new(_("Label has already been taken"))
       end
     end
+    return true
 
   end
 end

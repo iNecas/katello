@@ -71,9 +71,6 @@ class KTEnvironment < ActiveRecord::Base
   validates_with Validators::PriorValidator
   validates_with Validators::PathDescendentsValidator
 
-  # NG_TODO: this is expected to be removed soon
-  #after_create :create_default_content_view_version
-
   after_destroy :unset_users_with_default
 
    ERROR_CLASS_NAME = "Environment"
@@ -279,6 +276,8 @@ class KTEnvironment < ActiveRecord::Base
     end
   end
 
+
+  # NG_TODO: remove
   def create_default_content_view_version
     #Sadly this has to be created here, if it is created in the org
     #  it will not actually exist when we go to create library and so

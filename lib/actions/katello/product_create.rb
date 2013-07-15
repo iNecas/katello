@@ -18,6 +18,7 @@ module Actions
         product.save!
 
         plan_action(Candlepin::ProductCreate,
+                    'product_id' => product.id,
                     'name' => product.name,
                     'multiplier' => product.multiplier)
         plan_action(ElasticSearch::IndexUpdate, product)

@@ -20,7 +20,10 @@ module Actions
         plan_action(Candlepin::OwnerCreate,
                     'name' => organization.name,
                     'label' => organization.label)
-        plan_action(EnvironmentCreate, organization.library)
+        plan_action(LibraryCreate, organization.library)
+
+        plan_action(ContentViewCreate, organization.default_content_view)
+
         organization.providers.each do |provider|
           plan_action(ProviderCreate, provider)
         end

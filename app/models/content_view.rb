@@ -319,7 +319,7 @@ class ContentView < ActiveRecord::Base
                                      :cp_id => self.cp_environment_id(env),
                                      :environment_id => env.id,
                                      :content_view => self)
-      end
+    end
   end
 
   # Unassociate an environment from this content view. This can occur whenever

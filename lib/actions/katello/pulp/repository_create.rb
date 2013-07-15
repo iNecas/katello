@@ -20,6 +20,8 @@ module Actions
           param :pulp_id, String
           param :name, String
           param :content_type, String
+          param :relative_path, String
+          param :unprotected, :bool
           param :feed_ca, String
           param :feed_cert, String
           param :feed_key, String
@@ -52,6 +54,25 @@ module Actions
                              :ssl_client_cert => input['feed_cert'],
                              :ssl_client_key => input['feed_key'],
                              :feed_url => input['feed_url'])
+        end
+
+        def generate_distributor
+          case input['content_type']
+          when Repository::YUM_TYPE
+            Runcible::Extensions::YumDistributor.new(input['relative_path'],
+                                                     (input['unprotected'] || false),
+                                                     true,
+                                                     {:protected => true,
+                                                       :id => input['pulp_id'],
+                                                       :auto_publish => true})
+          when Repository::FILE_TYPE
+            dist = Runcible::Extensions::IsoDistributor.new(true, true)
+            dist.auto_publish = true
+            dist
+          else
+            raise _("Unexpected repo type %s") % input['content_type']
+          end
+
         end
 
       end

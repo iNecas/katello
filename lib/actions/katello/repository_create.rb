@@ -20,13 +20,12 @@ module Actions
         repo.relative_path = Glue::Pulp::Repos.custom_repo_path(library,
                                                                 repo.product,
                                                                 repo.label)
-        # NG_TODO: default content view for library missnig is blocker here!
         repo.content_view_version = library.default_content_view_version
         repo.save!
 
         plan_action(Candlepin::ContentCreate,
                     'repo_id' => repo.id,
-                    'environment_cp_id' => library.cp_id,
+                    'environment_cp_id' => library.id,
                     'product_cp_id' => repo.product.cp_id,
                     'label' => repo.custom_content_label,
                     'name' => repo.name,
@@ -37,15 +36,19 @@ module Actions
                     'pulp_id' => repo.pulp_id,
                     'name' => repo.name,
                     'content_type' => repo.content_type,
+                    'relative_path' => repo.relative_path,
+                    'unprotected' => repo.unprotected,
                     'feed_ca' => repo.feed_ca,
                     'feed_cert' => repo.feed_cert,
                     'feed_url' => repo.feed)
+
+        plan_action(ElasticSearch::IndexUpdate, repo)
+        plan_action(ElasticSearch::IndexUpdate, repo.product.provider)
 
         plan_self('id' => repo.id,
                   'label' => repo.label,
                   'name' => repo.name,
                   'product_label' => repo.product.label,
-                  'provider_label' => repo.product.provider.label,
                   'organization_label' => repo.organization.label)
       end
 
