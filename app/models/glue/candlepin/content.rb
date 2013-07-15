@@ -18,10 +18,12 @@ module Glue::Candlepin::Content
     base.send :include, Rails.application.routes.url_helpers
 
     base.class_eval do
-      before_save :save_content_orchestration
+      # NG_TODO: remove
+      #before_save :save_content_orchestration
+      #after_create :rectify_gpg_key_orchestration
+
       before_destroy :destroy_content_orchestration
       after_destroy :update_environment_content
-      after_create :rectify_gpg_key_orchestration
       after_update :handle_enabled_changed
     end
   end

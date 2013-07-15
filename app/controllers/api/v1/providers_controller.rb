@@ -90,7 +90,7 @@ class Api::V1::ProvidersController < Api::V1::ApiController
       p.organization  = @organization
       p.provider_type ||= Provider::CUSTOM
     end
-    sync_action(Actions::Headpin::ProviderCreate, @provider)
+    sync_action(::Actions::Headpin::ProviderCreate, @provider)
     respond
   end
 
@@ -226,9 +226,20 @@ class Api::V1::ProvidersController < Api::V1::ApiController
       raise HttpErrors::BadRequest, _("Validation failed: Label has already been taken")
     end
 
+    # TODO: product_params[:url] is thrown away
     gpg = GpgKey.readable(@provider.organization).find_by_name!(product_params[:gpg_key_name]) unless product_params[:gpg_key_name].blank?
-    prod = @provider.add_custom_product(labelize_params(product_params), product_params[:name], product_params[:description], product_params[:url], gpg)
-    respond_for_create :resource => prod
+    product = Product.new(:name => product_params[:name],
+                          :label => labelize_params(product_params),
+                          :description => product_params[:description],
+                          :multiplier => 1,
+                          :provider => @provider,
+                          :gpg_key => gpg) do |product|
+      product.environments += [@provider.organization.library]
+    end
+
+    sync_action(::Actions::Katello::ProductCreate, product)
+
+    respond_for_create :resource => product
   end
 
   private

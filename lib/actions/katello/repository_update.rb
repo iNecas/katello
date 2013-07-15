@@ -12,20 +12,22 @@
 
 module Actions
   module Katello
-    class UserCreate < Dynflow::Action
+    class RepositoryUpdate < Dynflow::Action
 
-      def self.subscribe
-        Headpin::UserCreate
+      def plan(repository)
+        #should_update_content?(repository)
+          #plan_action(Candlepin::ContentUpdate)
+        #end
       end
 
-      def plan(user)
-        pulp_user_create = plan_action(Pulp::UserCreate, 'remote_id' => user.remote_id)
-        plan_action(Pulp::UserSetSuperuser,
-                    'remote_id' => user.remote_id,
-                    'created' => pulp_user_create.output)
-        # we add the output of the previous action just for ordering
-        # purposes.
-        # NG_TODO: add the orderging DSL to Dynflow
+      def should_update_content?(repository)
+        # NG_TODO: we can do better :)
+        (repository.gpg_key_id_was == nil &&
+         repository.gpg_key_id != nil &&
+         repository.content.gpgUrl == '') ||
+          (repository.gpg_key_id_was != nil &&
+           repository.gpg_key_id == nil &&
+           repository.content.gpgUrl != '')
       end
 
     end

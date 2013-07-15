@@ -12,20 +12,16 @@
 
 module Actions
   module Katello
-    class UserCreate < Dynflow::Action
+    class ProductCreate < Dynflow::Action
 
-      def self.subscribe
-        Headpin::UserCreate
-      end
+      def plan(product)
+        product.save!
 
-      def plan(user)
-        pulp_user_create = plan_action(Pulp::UserCreate, 'remote_id' => user.remote_id)
-        plan_action(Pulp::UserSetSuperuser,
-                    'remote_id' => user.remote_id,
-                    'created' => pulp_user_create.output)
-        # we add the output of the previous action just for ordering
-        # purposes.
-        # NG_TODO: add the orderging DSL to Dynflow
+        plan_action(Candlepin::ProductCreate,
+                    'name' => product.name,
+                    'multiplier' => product.multiplier)
+        plan_action(ElasticSearch::IndexUpdate, product)
+        plan_action(ElasticSearch::IndexUpdate, product.provider)
       end
 
     end

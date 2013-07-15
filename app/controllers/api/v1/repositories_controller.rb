@@ -62,9 +62,17 @@ class Api::V1::RepositoriesController < Api::V1::ApiController
     elsif params[:gpg_key_name].nil?
       gpg = @product.gpg_key
     end
-    params[:unprotected] ||= false
-    content              = @product.add_repo(labelize_params(params), params[:name], params[:url], 'yum', params[:unprotected], gpg)
-    respond :resource => content
+    unprotected = params.has_key?(:unprotected) ? params[:unprotected] : false
+    env_product = EnvironmentProduct.find_or_create(@product.library, @product)
+    repository = Repository.new(:environment_product => env_product,
+                                :label => labelize_params(params),
+                                :name => params[:name],
+                                :feed => params[:url],
+                                :content_type => 'yum',
+                                :unprotected => unprotected,
+                                :gpg_key => gpg)
+    sync_action(::Actions::Katello::RepositoryCreate, repository)
+    respond :resource => repository.generate_metadata
   end
 
   api :GET, "/repositories/:id", "Show a repository"

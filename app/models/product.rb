@@ -97,6 +97,8 @@ class Product < ActiveRecord::Base
     @repo_cache ||= {}
 
     content_view ||= env.default_content_view
+    # NG_TODO: default environments rework pending merge
+    return [] unless content_view
     @repo_cache[env.id] ||= content_view.repos_in_product(env, self)
 
     if @repo_cache[env.id].blank? || include_disabled

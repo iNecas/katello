@@ -26,7 +26,7 @@ module Glue::Candlepin::Product
       # Entitlement Key for this product
       lazy_accessor :key, :initializer => lambda {|s| Resources::Candlepin::Product.key(cp_id, self.organization.label) }, :unless => lambda {|s| cp_id.nil? }
 
-      before_save :save_product_orchestration
+      #before_save :save_product_orchestration
       before_destroy :destroy_product_orchestration
 
       # we must store custom logger object during product importing so we can log status
@@ -306,14 +306,15 @@ module Glue::Candlepin::Product
     def save_product_orchestration
       case self.orchestration_for
         when :create
-          pre_queue.create(:name => "candlepin product: #{self.name}",                          :priority => 1, :action => [self, :set_product])
-          pre_queue.create(:name => "create unlimited subscription in candlepin: #{self.name}", :priority => 2, :action => [self, :set_unlimited_subscription])
+          #pre_queue.create(:name => "candlepin product: #{self.name}",                          :priority => 1, :action => [self, :set_product])
+          #pre_queue.create(:name => "create unlimited subscription in candlepin: #{self.name}", :priority => 2, :action => [self, :set_unlimited_subscription])
         when :import_from_cp
           # we leave it as it is - to not break re-import logic
         when :import_from_cp_ar_setup
           # skip creating product in candlepin as its already there
         when :update
-          #called when sync schedule changed, repo added, repo deleted
+        #called when sync schedule changed, repo added, repo deleted
+        # NG_TODO: reflect in dynflow actions
           pre_queue.create(:name => "update content in candlein: #{self.name}", :priority => 1, :action => [self, :update_content])
         when :promote
           #queue.create(:name => "update candlepin product: #{self.name}", :priority =>3, :action => [self, :update_content])

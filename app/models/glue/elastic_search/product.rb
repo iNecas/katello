@@ -16,7 +16,7 @@ module Glue::ElasticSearch::Product
     base.send :include, Ext::IndexedModel
 
     base.class_eval do
-      after_save :update_related_index
+      #after_save :update_related_index
 
       index_options :extended_json=>:extended_index_attrs,
                       :json=>{:only => [:name, :description]},

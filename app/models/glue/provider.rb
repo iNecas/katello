@@ -145,6 +145,7 @@ module Glue::Provider
       end
     end
 
+    # NG_TODO: remove
     def add_custom_product(label, name, description, url, gpg = nil)
       # URL isn't used yet until we can do custom repo discovery in pulp
       begin

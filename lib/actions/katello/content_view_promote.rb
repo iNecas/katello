@@ -15,6 +15,7 @@ module Actions
     class ContentViewPromote < Dynflow::Action
 
       def plan(content_view, from_env, to_env)
+
         plan_self('id' => content_view.id,
                   'label' => content_view.label,
                   'organization_label' => content_view.organization.label,

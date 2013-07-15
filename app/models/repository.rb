@@ -49,6 +49,8 @@ class Repository < ActiveRecord::Base
   validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
   validates_with Validators::RepoDisablementValidator, :attributes => :enabled, :on => :update
 
+  validate :validate_label_name_uniqueness
+
   validates_inclusion_of :content_type,
       :in => TYPES,
       :allow_blank => false,
@@ -270,5 +272,22 @@ class Repository < ActiveRecord::Base
     repo = self.library_instance || self
     search = Repository.where("library_instance_id=%s or repositories.id=%s"  % [repo.id, repo.id] )
     search.in_content_views([view])
+  end
+
+  # NG_TODO: make sure it works and refactor
+  def validate_label_name_uniqueness
+    is_dupe =  Repository.joins(:environment_product).where( :name=> self.name,
+                                                             "environment_products.product_id" => self.id, "environment_products.environment_id"=> self.product.library.id).count > 0
+    if is_dupe
+      raise Errors::ConflictException.new(_("Name has already been taken"))
+    end
+    unless self.label.blank?
+      is_dupe =  Repository.joins(:environment_product).where( :label=> self.label,
+                                                               "environment_products.product_id" => self.id, "environment_products.environment_id"=> self.product.library.id).count > 0
+      if is_dupe
+        raise Errors::ConflictException.new(_("Label has already been taken"))
+      end
+    end
+
   end
 end

@@ -16,7 +16,8 @@ module Actions
     class ChangesetPromote < Dynflow::Action
 
       def plan(changeset)
-        # third party plugins can hook here to perform additional actions
+        # third party plugins can hook here to perform additional
+        # actions
       end
 
     end

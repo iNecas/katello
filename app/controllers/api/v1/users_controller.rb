@@ -87,7 +87,7 @@ class Api::V1::UsersController < Api::V1::ApiController
       end
     end
 
-    sync_action(Actions::Headpin::UserCreate, @user)
+    sync_action(::Actions::Headpin::UserCreate, @user)
     respond
   end
 
