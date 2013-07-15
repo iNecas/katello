@@ -10,14 +10,16 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-module Katello
+module Headpin
   module Actions
-    class EnvironmentCreate < Dynflow::Action
+    class ProviderCreate < Dynflow::Action
 
-      def plan(environment)
-        plan_self('name' => environment.name,
-                  'label' => environment.label,
-                  'organization_label' => environment.organization.label)
+      def plan(provider)
+        provider.save!
+        plan_self('name' => provider.name,
+                  'organization_label' => provider.organization.label)
+
+        plan_action(ElasticSearch::IndexUpdate, provider)
       end
 
       input_format do

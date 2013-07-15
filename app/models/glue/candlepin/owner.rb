@@ -17,7 +17,7 @@ module Glue::Candlepin::Owner
     base.send :include, InstanceMethods
 
     base.class_eval do
-      before_save :save_owner_orchestration
+      #before_save :save_owner_orchestration
       before_destroy :destroy_owner_orchestration
 
       validates :label,

@@ -148,10 +148,12 @@ class Api::V1::EnvironmentsController < Api::V1::ApiController
   def create
     environment_params         = params[:environment]
     environment_params[:label] = labelize_params(environment_params)
-    @environment               = KTEnvironment.new(environment_params)
-    @organization.environments << @environment
-    raise ActiveRecord::RecordInvalid.new(@environment) unless @environment.valid?
-    @organization.save!
+    @environment               = KTEnvironment.new(environment_params) do |env|
+      env.organization = @organization
+    end
+
+    sync_action(Headpin::Actions::EnvironmentCreate, @environment)
+
     respond
   end
 

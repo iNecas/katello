@@ -86,10 +86,11 @@ class Api::V1::ProvidersController < Api::V1::ApiController
     param :provider_type, ["Red Hat", "Custom"], :required => true
   end
   def create
-    @provider = Provider.create!(params[:provider]) do |p|
+    @provider = Provider.new(params[:provider]) do |p|
       p.organization  = @organization
       p.provider_type ||= Provider::CUSTOM
     end
+    sync_action(Headpin::Actions::ProviderCreate, @provider)
     respond
   end
 

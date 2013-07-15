@@ -1,5 +1,10 @@
 module Katello
   module Bus
+
+    def self.sync
+      self.persisted
+    end
+
     def self.persisted
       @persisted ||= Dynflow::Bus::ActiveRecordBus.new
     end

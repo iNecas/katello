@@ -1,4 +1,4 @@
-#
+ #
 # Copyright 2013 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
@@ -10,25 +10,22 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-module Headpin
+module Katello
   module Actions
     class UserCreate < Dynflow::Action
 
-      def plan(user)
-        user.save!
-
-        plan_action(ElasticSearch::IndexUpdate, user)
-        plan_self('username' => user.username,
-                  'email' => user.email,
-                  'admin' => user.has_superadmin_role?,
-                  'hidden' => user.hidden?)
+      def self.subscribe
+        Headpin::Actions::UserCreate
       end
 
-      input_format do
-        param :username, String
-        param :email, String
-        param :admin, :bool
-        param :hidden, :bool
+      def plan(user)
+        pulp_user_create = plan_action(Pulp::UserCreate, 'remote_id' => user.remote_id)
+        plan_action(Pulp::UserSetSuperuser,
+                    'remote_id' => user.remote_id,
+                    'created' => pulp_user_create.output)
+        # we add the output of the previous action just for ordering
+        # purposes.
+        # NG_TODO: add the orderging DSL to Dynflow
       end
 
     end

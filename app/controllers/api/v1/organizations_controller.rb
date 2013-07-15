@@ -63,7 +63,11 @@ class Api::V1::OrganizationsController < Api::V1::ApiController
   param_group :organization
   def create
     label = labelize_params(params)
-    respond :resource => Organization.create!(:name => params[:name], :description => params[:description], :label => label)
+    organization = Organization.new(:name => params[:name], :description => params[:description], :label => label)
+
+    result = sync_action(Headpin::Actions::OrgCreate, organization)
+
+    respond :resource => organization, :result => result
   end
 
   api :PUT, "/organizations/:id", "Update an organization"

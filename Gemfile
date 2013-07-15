@@ -79,4 +79,5 @@ end
 gem 'justified', :require => 'justified/standard_error'
 #gem 'dynflow', '>= 0.1.0', :git => 'git://github.com/iNecas/dynflow'
 gem 'dynflow', :path => '/home/inecas/Projects/dynflow'
+gem 'apipie-params', :path => '/home/inecas/Projects/apipie-params'
 gem 'sinatra' # we use the dynflow web console

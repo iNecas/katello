@@ -12,23 +12,26 @@
 
 module Headpin
   module Actions
-    class UserCreate < Dynflow::Action
+    class EnvironmentDestroy < Dynflow::Action
 
-      def plan(user)
-        user.save!
-
-        plan_action(ElasticSearch::IndexUpdate, user)
-        plan_self('username' => user.username,
-                  'email' => user.email,
-                  'admin' => user.has_superadmin_role?,
-                  'hidden' => user.hidden?)
+      def plan(environment)
+        environment.save!
+        plan_self('id' => environment.id,
+                  'name' => environment.name,
+                  'label' => environment.label,
+                  'organization_label' => environment.organization.label)
       end
 
       input_format do
-        param :username, String
-        param :email, String
-        param :admin, :bool
-        param :hidden, :bool
+        param :id, Integer
+        param :name, String
+        param :label, String
+        param :organization_label, String
+      end
+
+      def finalize(*steps)
+        environment = Environment.find(input['id'])
+        environment.update_index
       end
 
     end

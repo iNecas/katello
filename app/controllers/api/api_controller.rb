@@ -108,4 +108,10 @@ class Api::ApiController < ActionController::Base
     raise "automatic response method '%s' not defined" % method_name unless respond_to? method_name
     return send(method_name, options)
   end
+
+
+  def sync_action(*args)
+    Katello::Bus.sync.trigger(*args)
+  end
+
 end

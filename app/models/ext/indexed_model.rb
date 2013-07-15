@@ -24,7 +24,7 @@ module Ext::IndexedModel
 
       if Rails.env.development? || Rails.env.production?
         include Tire::Model::Search
-        include Tire::Model::Callbacks
+        #include Tire::Model::Callbacks
         index_name Katello.config.elastic_index + '_' +  self.base_class.name.downcase
 
         #Shared analyzers.  If you need a model-specific analyzer for some reason,
@@ -60,9 +60,9 @@ module Ext::IndexedModel
       #   relation - the association for the other model
       #   attribute - the attribute on the current model, which if changes needs to trigger the index update
       def self.update_related_indexes relation, attribute
-        after_save lambda{|record| reindex_on_update(relation, attribute)}
-        before_destroy lambda{|record| save_indexed_relation(relation)}
-        after_destroy lambda{|record| reindex_relation}
+        #after_save lambda{|record| reindex_on_update(relation, attribute)}
+        #before_destroy lambda{|record| save_indexed_relation(relation)}
+        #after_destroy lambda{|record| reindex_relation}
       end
 
       # If this model (e.g. system_group) has an association (e.g. has_many) to another model (e.g. system)

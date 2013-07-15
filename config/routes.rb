@@ -5,6 +5,11 @@ Src::Application.routes.draw do
   apipie
 
   dynflow_console = Dynflow::WebConsole.setup do
+    before do
+      # NG_TODO: propper authentication
+      User.current = User.first
+    end
+
     set :bus, Katello::Bus.persisted
   end
 

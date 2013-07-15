@@ -15,10 +15,25 @@ module Headpin
     class OrgCreate < Dynflow::Action
 
       def plan(organization)
-        plan_self('name' => organization.name, 'label' => organization.label)
+        organization.save!
+
+        plan_action(Candlepin::OwnerCreate,
+                    'name' => organization.name,
+                    'label' => organization.label)
+        plan_action(EnvironmentCreate, organization.library)
+        organization.providers.each do |provider|
+          plan_action(ProviderCreate, provider)
+        end
+
+        plan_action(ElasticSearch::IndexUpdate, organization)
+
+        plan_self('id' => organization.id,
+                  'name' => organization.name,
+                  'label' => organization.label)
       end
 
       input_format do
+        param :id, Integer
         param :name, String
         param :label, String
       end

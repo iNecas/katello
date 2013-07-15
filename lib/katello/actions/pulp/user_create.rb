@@ -1,4 +1,4 @@
-#
+ #
 # Copyright 2013 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
@@ -10,17 +10,24 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+module Katello
+  module Actions
+    module Pulp
+      class UserCreate < Dynflow::Action
 
-module Glue::ElasticSearch::Environment
-  def self.included(base)
-    base.class_eval do
-      #after_save :update_related_index
-      #after_destroy :delete_related_index
+        input_format do
+          param :remote_id, String
+        end
+
+        def run
+          user_params = {
+            :name => input['remote_id'],
+            :password => Password.generate_random_string(16)
+          }
+          Runcible::Resources::User.create(input['remote_id'], user_params )
+        end
+
+      end
     end
   end
-
-  def delete_related_index
-    self.organization.update_index if self.organization
-  end
-
 end

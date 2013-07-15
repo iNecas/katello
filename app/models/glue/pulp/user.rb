@@ -17,7 +17,9 @@ module Glue::Pulp::User
     base.send :include, LazyAccessor
     base.class_eval do
       lazy_accessor :login, :name, :initializer => lambda {|s| Runcible::Resources::User.retrieve(self.remote_id) }
-      before_save :save_pulp_orchestration
+
+      #NG_TODO: remove
+      #before_save :save_pulp_orchestration
       before_destroy :destroy_pulp_orchestration
     end
   end

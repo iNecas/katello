@@ -16,14 +16,6 @@ class KTEnvironment < ActiveRecord::Base
   include Glue::ElasticSearch::Environment if Katello.config.use_elasticsearch
   include Glue if Katello.config.use_cp || Katello.config.use_pulp
 
-  include Glue::Event
-  def create_event
-    Katello::Actions::EnvironmentCreate
-  end
-  def destroy_event
-    Katello::Actions::EnvironmentDestroy
-  end
-
   self.table_name = "environments"
   include Ext::LabelFromName
   include Ext::PermissionTagCleanup
@@ -79,7 +71,8 @@ class KTEnvironment < ActiveRecord::Base
   validates_with Validators::PriorValidator
   validates_with Validators::PathDescendentsValidator
 
-  after_create :create_default_content_view_version
+  # NG_TODO: this is expected to be removed soon
+  #after_create :create_default_content_view_version
 
   after_destroy :unset_users_with_default
 
