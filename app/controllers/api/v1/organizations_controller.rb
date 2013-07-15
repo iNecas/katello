@@ -65,7 +65,7 @@ class Api::V1::OrganizationsController < Api::V1::ApiController
     label = labelize_params(params)
     organization = Organization.new(:name => params[:name], :description => params[:description], :label => label)
 
-    result = sync_action(Headpin::Actions::OrgCreate, organization)
+    result = sync_action(Actions::Headpin::OrgCreate, organization)
 
     respond :resource => organization, :result => result
   end

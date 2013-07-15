@@ -75,7 +75,7 @@ class DeletionChangeset < Changeset
     self.promotion_date = Time.now
     self.state          = Changeset::DELETED
 
-    Glue::Event.trigger(Katello::Actions::ChangesetPromote, self)
+    Glue::Event.trigger(Actions::Katello::ChangesetPromote, self)
 
     self.save!
 

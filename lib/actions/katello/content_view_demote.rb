@@ -10,8 +10,9 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-module Katello
-  module Actions
+
+module Actions
+  module Katello
     class ContentViewDemote < Dynflow::Action
 
       def plan(content_view, from_env)

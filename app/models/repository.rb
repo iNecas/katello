@@ -21,7 +21,7 @@ class Repository < ActiveRecord::Base
 
   include Glue::Event
   def destroy_event
-    Katello::Actions::RepositoryDestroy
+    Actions::Katello::RepositoryDestroy
   end
 
   include AsyncOrchestration

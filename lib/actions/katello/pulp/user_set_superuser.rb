@@ -10,24 +10,21 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-module Headpin
-  module Actions
-    class ProviderCreate < Dynflow::Action
+module Actions
+  module Katello
+    module Pulp
+      class UserSetSuperuser < Dynflow::Action
 
-      def plan(provider)
-        provider.save!
-        plan_self('name' => provider.name,
-                  'organization_label' => provider.organization.label)
+        input_format do
+          param :remote_id, String
+          param :created, Pulp::UserCreate.output
+        end
 
-        plan_action(ElasticSearch::IndexUpdate, provider)
+        def run
+          Runcible::Resources::Role.add "super-users", input['remote_id']
+        end
+
       end
-
-      input_format do
-        param :name, String
-        param :label, String
-        param :organization_label, String
-      end
-
     end
   end
 end

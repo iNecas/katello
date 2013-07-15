@@ -10,23 +10,19 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-module Headpin
-  module Actions
-    class EnvironmentCreate < Dynflow::Action
+module Actions
+  module Katello
 
-      def plan(environment)
-        environment.save!
-        plan_self('name' => environment.name,
-                  'label' => environment.label,
-                  'organization_label' => environment.organization.label)
-
-        plan_action(ElasticSearch::IndexUpdate, environment.organization)
-      end
+    class SyncRepository < Dynflow::Action
 
       input_format do
         param :name, String
-        param :label, String
-        param :organization_label, String
+      end
+
+      def run
+        time = rand(10)
+        sleep(time) # simulate real action
+        output['time'] = time
       end
 
     end

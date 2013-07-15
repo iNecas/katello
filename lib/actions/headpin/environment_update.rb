@@ -10,17 +10,25 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-module Headpin
-  module Actions
-    class OrgDestroy < Dynflow::Action
+module Actions
+  module Headpin
+    class EnvironmentUpdate < Dynflow::Action
 
-      def plan(organization)
-        plan_self('name' => organization.name, 'label' => organization.label)
+      def plan(environment)
+        plan_self('name' => environment.name,
+                  'label' => environment.label,
+                  'organization_label' => environment.organization.label)
+
+        plan_action(ElasticSearch::IndexUpdate, environment.organization)
+        environment.activation_keys.each do |activation_key|
+          plan_action(ElasticSearch::IndexUpdate, activation_key)
+        end
       end
 
       input_format do
         param :name, String
         param :label, String
+        param :organization_label, String
       end
 
     end

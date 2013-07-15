@@ -10,24 +10,17 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-module Katello
-  module Actions
-    class ContentViewPromote < Dynflow::Action
+module Actions
+  module Headpin
+    class OrgDestroy < Dynflow::Action
 
-      def plan(content_view, from_env, to_env)
-        plan_self('id' => content_view.id,
-                  'label' => content_view.label,
-                  'organization_label' => content_view.organization.label,
-                  'from_env_label' => from_env.label,
-                  'to_env_label' => to_env.label)
+      def plan(organization)
+        plan_self('name' => organization.name, 'label' => organization.label)
       end
 
       input_format do
-        param :id, Integer
+        param :name, String
         param :label, String
-        param :organization_label, String
-        param :from_env_label, String
-        param :to_env_label, String
       end
 
     end

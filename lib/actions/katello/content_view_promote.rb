@@ -10,25 +10,24 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-module Headpin
-  module Actions
-    class UserCreate < Dynflow::Action
+module Actions
+  module Katello
+    class ContentViewPromote < Dynflow::Action
 
-      def plan(user)
-        user.save!
-
-        plan_action(ElasticSearch::IndexUpdate, user)
-        plan_self('username' => user.username,
-                  'email' => user.email,
-                  'admin' => user.has_superadmin_role?,
-                  'hidden' => user.hidden?)
+      def plan(content_view, from_env, to_env)
+        plan_self('id' => content_view.id,
+                  'label' => content_view.label,
+                  'organization_label' => content_view.organization.label,
+                  'from_env_label' => from_env.label,
+                  'to_env_label' => to_env.label)
       end
 
       input_format do
-        param :username, String
-        param :email, String
-        param :admin, :bool
-        param :hidden, :bool
+        param :id, Integer
+        param :label, String
+        param :organization_label, String
+        param :from_env_label, String
+        param :to_env_label, String
       end
 
     end

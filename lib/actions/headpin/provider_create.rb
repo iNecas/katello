@@ -10,13 +10,22 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-module Katello
-  module Actions
+module Actions
+  module Headpin
+    class ProviderCreate < Dynflow::Action
 
-    class ChangesetPromote < Dynflow::Action
+      def plan(provider)
+        provider.save!
+        plan_self('name' => provider.name,
+                  'organization_label' => provider.organization.label)
 
-      def plan(changeset)
-        # third party plugins can hook here to perform additional actions
+        plan_action(ElasticSearch::IndexUpdate, provider)
+      end
+
+      input_format do
+        param :name, String
+        param :label, String
+        param :organization_label, String
       end
 
     end

@@ -10,32 +10,28 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-module Headpin
-  module Actions
-    class OrgCreate < Dynflow::Action
+module Actions
+  module Headpin
+    class EnvironmentDestroy < Dynflow::Action
 
-      def plan(organization)
-        organization.save!
-
-        plan_action(Candlepin::OwnerCreate,
-                    'name' => organization.name,
-                    'label' => organization.label)
-        plan_action(EnvironmentCreate, organization.library)
-        organization.providers.each do |provider|
-          plan_action(ProviderCreate, provider)
-        end
-
-        plan_action(ElasticSearch::IndexUpdate, organization)
-
-        plan_self('id' => organization.id,
-                  'name' => organization.name,
-                  'label' => organization.label)
+      def plan(environment)
+        environment.save!
+        plan_self('id' => environment.id,
+                  'name' => environment.name,
+                  'label' => environment.label,
+                  'organization_label' => environment.organization.label)
       end
 
       input_format do
         param :id, Integer
         param :name, String
         param :label, String
+        param :organization_label, String
+      end
+
+      def finalize(*steps)
+        environment = Environment.find(input['id'])
+        environment.update_index
       end
 
     end

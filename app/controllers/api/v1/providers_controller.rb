@@ -90,7 +90,7 @@ class Api::V1::ProvidersController < Api::V1::ApiController
       p.organization  = @organization
       p.provider_type ||= Provider::CUSTOM
     end
-    sync_action(Headpin::Actions::ProviderCreate, @provider)
+    sync_action(Actions::Headpin::ProviderCreate, @provider)
     respond
   end
 

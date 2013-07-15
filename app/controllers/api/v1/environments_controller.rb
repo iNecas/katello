@@ -152,7 +152,7 @@ class Api::V1::EnvironmentsController < Api::V1::ApiController
       env.organization = @organization
     end
 
-    sync_action(Headpin::Actions::EnvironmentCreate, @environment)
+    sync_action(Actions::Headpin::EnvironmentCreate, @environment)
 
     respond
   end

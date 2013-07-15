@@ -1,7 +1,5 @@
-module Katello
-
-  module Actions
-
+module Actions
+  module Katello
     class SyncRepositories < Dynflow::Action
 
       def plan(repos)

@@ -1,4 +1,4 @@
- #
+#
 # Copyright 2013 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
@@ -10,21 +10,14 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-module Katello
-  module Actions
-    module Pulp
-      class UserSetSuperuser < Dynflow::Action
+module Actions
+  module Katello
+    class RepositoryDestroy < Dynflow::Action
 
-        input_format do
-          param :remote_id, String
-          param :created, Pulp::UserCreate.output
-        end
-
-        def run
-          Runcible::Resources::Role.add "super-users", input['remote_id']
-        end
-
+      def plan(repo)
+        # third party plugins can hook here to perform additional actions
       end
+
     end
   end
 end

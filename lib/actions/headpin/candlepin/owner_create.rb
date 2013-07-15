@@ -1,5 +1,5 @@
-module Headpin
-  module Actions
+module Actions
+  module Headpin
     module Candlepin
 
       class OwnerCreate < Dynflow::Action

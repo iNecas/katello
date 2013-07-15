@@ -1,4 +1,4 @@
- #
+#
 # Copyright 2013 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
@@ -10,8 +10,8 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-module Katello
-  module Actions
+module Actions
+  module Katello
     class UserCreate < Dynflow::Action
 
       def self.subscribe
