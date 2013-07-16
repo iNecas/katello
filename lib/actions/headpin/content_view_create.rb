@@ -16,7 +16,17 @@ module Actions
 
       def plan(content_view)
         content_view.save!
+        library_env = content_view.organization.library
+        library_view_env = content_view.add_environment(library_env)
+
+        version = ContentViewVersion.create!(:content_view => content_view,
+                                             :version => 1) do |v|
+          v.content_view_version_environments.build(:environment => library_env)
+        end
+        plan_action(ContentViewEnvironmentCreate, library_view_env)
         plan_action(ElasticSearch::IndexUpdate, content_view)
+        # NG_TODO: we need to make sure this actions were run before
+        # the depending actions
       end
 
     end

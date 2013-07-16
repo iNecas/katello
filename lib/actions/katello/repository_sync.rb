@@ -21,7 +21,7 @@ module Actions
 
       def plan(repo)
         sync_task_created = plan_action(Pulp::SyncTaskCreate, 'pulp_id' => repo.pulp_id)
-        plan_action(Pulp::SyncTaskWait, 'sync_task_created' => sync_task_created.output)
+        plan_action(Pulp::TasksWait, 'tasks' => [sync_task_created.output])
         plan_self('id' => repo.id)
       end
 

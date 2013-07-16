@@ -16,19 +16,12 @@ module Actions
 
       def plan(library_env)
         library_env.save!
-        library_view = ContentView.create!(:default => true,
+        library_view = ContentView.new(:default => true,
                                            :name => "Default Organization View",
                                            :organization=> library_env.organization)
-        library_view_env = library_view.add_environment(library_env)
-
-        version = ContentViewVersion.create!(:content_view => library_view,
-                                             :version => 1) do |v|
-          v.content_view_version_environments.build(:environment => library_env)
-        end
 
         plan_action(EnvironmentCreate, library_env)
         plan_action(ContentViewCreate, library_view)
-        plan_action(ContentViewEnvironmentCreate, library_view_env)
       end
 
       input_format do

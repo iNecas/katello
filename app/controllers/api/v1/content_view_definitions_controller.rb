@@ -117,9 +117,19 @@ class Api::V1::ContentViewDefinitionsController < Api::V1::ApiController
   param :description, String, :desc => "Description for the new content view", :required => false
   param :id, :identifier, :desc => "Definition identifier", :required => true
   def publish
-    view = @definition.publish(params[:name], params[:description], params[:label])
-    task = view.content_view_versions.first.task_status
-    respond_for_async :resource => task
+    options = { :async => true, :notify => false }
+
+    view = ContentView.new(:name => params[:name],
+                           :label => params[:label],
+                           :description => params[:description],
+                           :content_view_definition => @definition,
+                           :organization => @definition.organization)
+
+    # NG_TODO: should be async
+    execution = sync_action(::Actions::Katello::ContentViewPublish, view)
+    respond :resource => @definition
+    # NG_TODO: api handling tasks proprly
+    #respond_for_async :resource => task
   end
 
   api :DELETE, "/content_view_definitions/:id", "Delete a cv definition"

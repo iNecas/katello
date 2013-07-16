@@ -10,35 +10,32 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+
 module Actions
   module Katello
     module Pulp
-      class SyncTaskWait < Dynflow::Action
+      class RepositoryGenerateMetadata < Dynflow::Action
 
         input_format do
-          param :sync_task_created, Pulp::SyncTaskCreate.output
+          # NG_TODO: close this into nested hash just because
+          # we might chain it with RepositoryCreate
+          param :repo, Hash do
+            param :pulp_id
+          end
         end
 
         output_format do
-          param :state, String
-          param :finish_time
-          param :progress
+          param :tasks, Array do
+            param :task_id
+          end
         end
 
         def run
-          task_id = input['sync_task_created']['task_id']
+          pulp_id = input['repo']['pulp_id']
+          tasks = Runcible::Extensions::Repository.publish_all(pulp_id)
 
-          pulp_task = nil
-
-          while true
-            pulp_task = Runcible::Resources::Task.poll(task_id)
-            break if pulp_task[:finish_time]
-            sleep 1
-          end
-
-          output['finish_time'] = pulp_task[:finish_time]
+          output['tasks'] = tasks.map { |t| { 'task_id' => t['task_id']} }
         end
-
       end
     end
   end

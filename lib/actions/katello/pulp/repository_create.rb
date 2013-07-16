@@ -28,6 +28,21 @@ module Actions
           param :feed_url, String
         end
 
+        output_format do
+          param :pulp_id
+        end
+
+        def plan(repo)
+          plan_self('pulp_id' => repo.pulp_id,
+                    'name' => repo.name,
+                    'content_type' => repo.content_type,
+                    'relative_path' => repo.relative_path,
+                    'unprotected' => repo.unprotected,
+                    'feed_ca' => repo.feed_ca,
+                    'feed_cert' => repo.feed_cert,
+                    'feed_url' => repo.feed)
+        end
+
         def run
           importer = generate_importer
 
@@ -38,6 +53,9 @@ module Actions
                                                   importer,
                                                   distributors,
                                                   { :display_name => input['name'] })
+
+          # NG_TODO: to be able to chain this action
+          output['pulp_id'] = input['pulp_id']
         end
 
         def generate_importer

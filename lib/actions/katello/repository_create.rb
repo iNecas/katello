@@ -16,8 +16,8 @@ module Actions
 
       def plan(repo)
         library = repo.product.library
-        repo.pulp_id = repo.product.repo_id(repo.label)
-        repo.relative_path = Glue::Pulp::Repos.custom_repo_path(library,
+        repo.pulp_id ||= repo.product.repo_id(repo.label)
+        repo.relative_path ||= Glue::Pulp::Repos.custom_repo_path(library,
                                                                 repo.product,
                                                                 repo.label)
         repo.content_view_version = library.default_content_view_version
@@ -32,15 +32,7 @@ module Actions
                     'content_url' => Glue::Pulp::Repos.custom_content_path(repo.product, repo.label),
                     'gpg_url' => repo.yum_gpg_key_url)
 
-        plan_action(Pulp::RepositoryCreate,
-                    'pulp_id' => repo.pulp_id,
-                    'name' => repo.name,
-                    'content_type' => repo.content_type,
-                    'relative_path' => repo.relative_path,
-                    'unprotected' => repo.unprotected,
-                    'feed_ca' => repo.feed_ca,
-                    'feed_cert' => repo.feed_cert,
-                    'feed_url' => repo.feed)
+        plan_action(Pulp::RepositoryCreate, repo)
 
         plan_action(ElasticSearch::IndexUpdate, repo)
         plan_action(ElasticSearch::IndexUpdate, repo.product.provider)

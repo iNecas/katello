@@ -87,6 +87,7 @@ module Glue::Candlepin::Environment
     protected
 
     def all_env_content_ids
+      # NG_TODO: owner means environment: how clear is that! :)
       self.content_view.repos(self.owner).select{|r| r.enabled}.reduce(Set.new) do |env_content_ids, repo|
         env_content_ids << repo.content_id
       end
