@@ -366,22 +366,13 @@ module Glue::Pulp::Repo
       return false
     end
 
+    # NG_TODO: what options are good for?
     def sync(options = { })
-      sync_options= {}
-      sync_options[:max_speed] ||= Katello.config.pulp.sync_KBlimit if Katello.config.pulp.sync_KBlimit # set bandwidth limit
-      sync_options[:num_threads] ||= Katello.config.pulp.sync_threads if Katello.config.pulp.sync_threads # set threads per sync
-      pulp_tasks = Runcible::Extensions::Repository.sync(self.pulp_id, {:override_config=>sync_options})
-      pulp_task = pulp_tasks.select{|i| i['tags'].include?("pulp:action:sync")}.first.with_indifferent_access
-
-      task      = PulpSyncStatus.using_pulp_task(pulp_task) do |t|
-        t.organization         = self.environment.organization
-        t.parameters ||= {}
-        t.parameters[:options] = options
-      end
-      task.save!
-      return [task]
+      # NG_TODO: should be async
+      Katello::Bus.sync.trigger(Actions::Katello::RepositorySync, self)
     end
 
+    # NG_TODO: this method seems to be unused
     def handle_sync_complete_task(task_id)
       #pulp_task =  Runcible::Resources::Task.poll(pulp_task_id)
 

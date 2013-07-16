@@ -149,7 +149,9 @@ Pulp doesn't send correct headers."
     repo    = Repository.where(:pulp_id => repo_id).first
     raise _("Couldn't find repository '%s'") % repo.name if repo.nil?
     Rails.logger.info("Sync_complete called for #{repo.name}, running after_sync.")
-    repo.async(:organization => repo.environment.organization).after_sync(params[:task_id])
+
+    # NG_TODO: remove - the indexing will be handled in dynflow actions
+    #repo.async(:organization => repo.environment.organization).after_sync(params[:task_id])
     respond_for_status
   end
 

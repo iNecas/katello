@@ -12,17 +12,22 @@
 
 module Actions
   module Katello
-
-    class SyncRepository < Dynflow::Action
+    class RepositorySync < Dynflow::Action
 
       input_format do
-        param :name, String
+        param :id, Integer
       end
 
-      def run
-        time = rand(10)
-        sleep(time) # simulate real action
-        output['time'] = time
+
+      def plan(repo)
+        sync_task_created = plan_action(Pulp::SyncTaskCreate, 'pulp_id' => repo.pulp_id)
+        plan_action(Pulp::SyncTaskWait, 'sync_task_created' => sync_task_created.output)
+        plan_self('id' => repo.id)
+      end
+
+      def finalize(*args)
+        repo = Repository.find(input['id'])
+        repo.index_content
       end
 
     end
