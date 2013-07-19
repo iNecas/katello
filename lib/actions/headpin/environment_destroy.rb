@@ -15,7 +15,6 @@ module Actions
     class EnvironmentDestroy < Dynflow::Action
 
       def plan(environment)
-        environment.save!
         plan_self('id' => environment.id,
                   'name' => environment.name,
                   'label' => environment.label,
@@ -27,11 +26,6 @@ module Actions
         param :name, String
         param :label, String
         param :organization_label, String
-      end
-
-      def finalize(*steps)
-        environment = Environment.find(input['id'])
-        environment.update_index
       end
 
     end

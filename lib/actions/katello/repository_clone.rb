@@ -28,19 +28,15 @@ module Actions
 
           # NG_TODO: raise exeception here and try to resume: fail on deps
           clone_action = plan_action(Pulp::RepositoryCloneContent,
-                                     'origin_repo' => { 'pulp_id' => repo.pulp_id },
-                                     'cloned_repo' => { 'pulp_id' => repo_clone.pulp_id})
+                                     'origin_repo_id' => repo.pulp_id,
+                                     'cloned_repo_id' =>  repo_clone.pulp_id)
 
-          # NG_TODO: be able to reference subkey
-          tasks_wait_action = plan_action(Pulp::TasksWait, 'tasks' => clone_action.output)
-          # NG_TODO: we really don't care about tasks here, just want to
-          # make sure we wait for tasks before proceeding
-          # this can be also postponed after another actions on the repo
+          tasks_wait_action = plan_action(Pulp::TasksWait, 'tasks' => clone_action.output['tasks'])
+          # NG_TODO: this maybe should be postponed after another actions on the repo
           # (such as repos unassociation)
           metadata_action = plan_action(Pulp::RepositoryGenerateMetadata,
-                                        'repo' => cloned_repo,
-                                        'tasks' => tasks_wait_action.output)
-          tasks_wait_action = plan_action(Pulp::TasksWait, 'tasks' => metadata_action.output)
+                                        'repo' => cloned_repo)
+          tasks_wait_action = plan_action(Pulp::TasksWait, 'tasks' => metadata_action.output['tasks'])
         end
       end
 

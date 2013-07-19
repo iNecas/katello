@@ -19,13 +19,10 @@ module Actions
       end
 
       def plan(user)
-        pulp_user_create = plan_action(Pulp::UserCreate, 'remote_id' => user.remote_id)
-        plan_action(Pulp::UserSetSuperuser,
-                    'remote_id' => user.remote_id,
-                    'created' => pulp_user_create.output)
-        # we add the output of the previous action just for ordering
-        # purposes.
-        # NG_TODO: add the orderging DSL to Dynflow
+        sequence do
+          pulp_user_create = plan_action(Pulp::UserCreate, 'remote_id' => user.remote_id)
+          plan_action(Pulp::UserSetSuperuser, 'remote_id' => user.remote_id)
+        end
       end
 
     end

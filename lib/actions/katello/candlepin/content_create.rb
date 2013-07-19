@@ -33,12 +33,7 @@ module Actions
           content_created = plan_self(input)
           plan_action(Candlepin::ContentAddToProduct,
                       'product_cp_id' => input['product_cp_id'],
-                      'content_created' => content_created.output)
-          # NG_TODO: Update library content_view environment to make
-          # the repo available in there (after partha confirms it's
-          # possible to do it?
-          # see glue/pulp/repos.rb && self.organization.default_content_view.update_cp_content(self.organization.library)
-
+                      'content_cp_id' => content_created.output['cp_id'])
         end
 
         def run

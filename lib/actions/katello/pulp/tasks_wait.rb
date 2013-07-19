@@ -28,10 +28,7 @@ module Actions
         end
 
         def run
-          tasks = input['tasks']
-          # NG_TODO: be able to reference subkey
-          tasks = tasks['tasks'] if tasks.is_a?(Hash)
-          pending_task_ids = tasks.map { |task| task['task_id'] }
+          pending_task_ids = input['tasks'].map { |task| task['task_id'] }
           pulp_task = nil
 
           while pending_task_ids.any?

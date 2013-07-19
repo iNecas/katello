@@ -18,12 +18,12 @@ module Actions
 
         input_format do
           param :product_cp_id, String
-          param :content_created, Candlepin::ContentCreate.output
+          param :content_cp_id
         end
 
         def run
           Resources::Candlepin::Product.add_content(input['product_cp_id'],
-                                                    input['content_created']['cp_id'], true)
+                                                    input['content_cp_id'], true)
         end
 
       end

@@ -25,8 +25,6 @@ module Actions
         end
         plan_action(ContentViewEnvironmentCreate, library_view_env)
         plan_action(ElasticSearch::IndexUpdate, content_view)
-        # NG_TODO: we need to make sure this actions were run before
-        # the depending actions
       end
 
     end

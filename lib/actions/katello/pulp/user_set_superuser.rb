@@ -17,7 +17,6 @@ module Actions
 
         input_format do
           param :remote_id, String
-          param :created, Pulp::UserCreate.output
         end
 
         def run

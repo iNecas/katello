@@ -17,13 +17,8 @@ module Actions
       class RepositoryCloneContent < Dynflow::Action
 
         input_format do
-          param :origin_repo, Hash do
-            parma :pulp_id
-          end
-
-          param :cloned_repo, Hash do
-            param :pulp_id
-          end
+          param :origin_repo_id
+          param :cloned_repo_id
         end
 
         output_format do
@@ -33,8 +28,9 @@ module Actions
         end
 
         def run
-          origin_id = input['origin_repo']['pulp_id']
-          cloned_id = input['cloned_repo']['pulp_id']
+          origin_id = input['origin_repo_id']
+          cloned_id = input['cloned_repo_id']
+          # NG_TODO: raise here and try to resume
           tasks = []
 
           # In order to reduce the memory usage of pulp during the copy process,
