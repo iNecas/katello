@@ -17,12 +17,12 @@ module Actions
       def plan(organization)
         organization.save!
 
-        plan_action(Candlepin::OwnerCreate,
-                    'name' => organization.name,
-                    'label' => organization.label)
-        plan_action(LibraryCreate, organization.library)
-
-        plan_action(ContentViewCreate, organization.default_content_view)
+        sequence do
+          plan_action(Candlepin::OwnerCreate,
+                      'name' => organization.name,
+                      'label' => organization.label)
+          plan_action(LibraryCreate, organization.library)
+        end
 
         organization.providers.each do |provider|
           plan_action(ProviderCreate, provider)
