@@ -15,7 +15,10 @@ module Actions
     module Candlepin
       class ProductCreate < Dynflow::Action
 
+        include Helpers::CandlepinAction
+
         input_format do
+          param :cp_user
           param :product_id, Integer
           param :name, String
           param :multiplier, Integer
@@ -26,12 +29,14 @@ module Actions
         end
 
         def run
-          cp_attributes = [{ :name => "arch", :value => "ALL" }]
+          as_cp_user do
+            cp_attributes = [{ :name => "arch", :value => "ALL" }]
 
-          product = Resources::Candlepin::Product.create(:name => input['name'],
-                                                         :multiplier => input['multiplier'],
-                                                         :attributes => cp_attributes)
-          output['cp_id'] = product[:id]
+            product = Resources::Candlepin::Product.create(:name => input['name'],
+                                                           :multiplier => input['multiplier'],
+                                                           :attributes => cp_attributes)
+            output['cp_id'] = product[:id]
+          end
         end
 
         def finalize(*steps)

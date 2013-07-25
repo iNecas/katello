@@ -140,8 +140,8 @@ class User < ActiveRecord::Base
   end
 
   def self.cp_oauth_header
-    raise Errors::UserNotSet, "unauthenticated to call a backend engine" if User.current.nil?
-    User.current.cp_oauth_header
+    raise Errors::UserNotSet, "unauthenticated to call a backend engine" unless Thread.current['cp_user']
+    { 'cp-user' => Thread.current['cp_user'] }
   end
 
   # is the current user consumer? (rhsm)
@@ -200,9 +200,17 @@ class User < ActiveRecord::Base
     self.role_ids - [self.own_role.id]
   end
 
-  def cp_oauth_header
-    { 'cp-user' => self.username }
+  def pulp_user
+    self.remote_id
   end
+
+  def cp_user
+    self.username
+  end
+  # TODO: remove
+  #def cp_oauth_header
+  #  { 'cp-user' => self.username }
+  #end
 
   def send_password_reset
     # generate a random password reset token that will be valid for only a configurable period of time

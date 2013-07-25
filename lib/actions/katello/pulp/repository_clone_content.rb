@@ -16,7 +16,10 @@ module Actions
     module Pulp
       class RepositoryCloneContent < Dynflow::Action
 
+        include Helpers::PulpAction
+
         input_format do
+          param :pulp_user
           param :origin_repo_id
           param :cloned_repo_id
         end
@@ -30,26 +33,28 @@ module Actions
         def run
           origin_id = input['origin_repo_id']
           cloned_id = input['cloned_repo_id']
-          # NG_TODO: raise here and try to resume
           tasks = []
 
-          # In order to reduce the memory usage of pulp during the copy process,
-          # include the fields that will uniquely identify the rpm. If no fields
-          # are listed, pulp will retrieve every field it knows about for the rpm
-          # (e.g. changelog, filelist...etc).
-          tasks << Runcible::Extensions::Rpm.copy(origin_id, cloned_id,
-                                                  { :fields => Package::PULP_SELECT_FIELDS })
-          tasks << Runcible::Extensions::Distribution.copy(origin_id, cloned_id)
+          as_pulp_user do
 
-          # Since the rpms will be copied above, during the copy of errata and package groups,
-          # include the copy_children flag to request that pulp skip copying them again.
-          tasks << Runcible::Extensions::Errata.copy(origin_id, cloned_id,
-                                                     { :copy_children => false })
-          tasks << Runcible::Extensions::PackageGroup.copy(origin_id, cloned_id,
-                                                           { :copy_children => false })
-          tasks << Runcible::Extensions::YumRepoMetadataFile.copy(origin_id, cloned_id)
+            # In order to reduce the memory usage of pulp during the copy process,
+            # include the fields that will uniquely identify the rpm. If no fields
+            # are listed, pulp will retrieve every field it knows about for the rpm
+            # (e.g. changelog, filelist...etc).
+            tasks << Runcible::Extensions::Rpm.copy(origin_id, cloned_id,
+                                                    { :fields => Package::PULP_SELECT_FIELDS })
+            tasks << Runcible::Extensions::Distribution.copy(origin_id, cloned_id)
 
-          output['tasks'] = tasks.map { |t| { 'task_id' => t['task_id']} }
+            # Since the rpms will be copied above, during the copy of errata and package groups,
+            # include the copy_children flag to request that pulp skip copying them again.
+            tasks << Runcible::Extensions::Errata.copy(origin_id, cloned_id,
+                                                       { :copy_children => false })
+            tasks << Runcible::Extensions::PackageGroup.copy(origin_id, cloned_id,
+                                                             { :copy_children => false })
+            tasks << Runcible::Extensions::YumRepoMetadataFile.copy(origin_id, cloned_id)
+
+            output['tasks'] = tasks.map { |t| { 'task_id' => t['task_id']} }
+          end
         end
 
       end

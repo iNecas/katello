@@ -18,6 +18,7 @@ module Actions
         content_view_environment.save!
         content_view = content_view_environment.content_view
         plan_action(Candlepin::EnvironmentCreate,
+                    'cp_user' => User.current.cp_user,
                     'organization_label' => content_view.organization.label,
                     'cp_id' => content_view_environment.cp_id,
                     'name' => content_view_environment.label,

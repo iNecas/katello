@@ -16,7 +16,10 @@ module Actions
     module Pulp
       class RepositoryCreate < Dynflow::Action
 
+        include Helpers::PulpAction
+
         input_format do
+          param :pulp_user
           param :pulp_id, String
           param :name, String
           param :content_type, String
@@ -33,7 +36,8 @@ module Actions
         end
 
         def plan(repo)
-          plan_self('pulp_id' => repo.pulp_id,
+          plan_self('pulp_user' => User.current.pulp_user,
+                    'pulp_id' => repo.pulp_id,
                     'name' => repo.name,
                     'content_type' => repo.content_type,
                     'relative_path' => repo.relative_path,
@@ -44,18 +48,20 @@ module Actions
         end
 
         def run
-          importer = generate_importer
+          as_pulp_user do
+            importer = generate_importer
 
-          distributors = [generate_distributor]
+            distributors = [generate_distributor]
 
-          Runcible::Extensions::Repository.
-            create_with_importer_and_distributors(input['pulp_id'],
-                                                  importer,
-                                                  distributors,
-                                                  { :display_name => input['name'] })
+            Runcible::Extensions::Repository.
+                create_with_importer_and_distributors(input['pulp_id'],
+                                                      importer,
+                                                      distributors,
+                                                      { :display_name => input['name'] })
 
-          # NG_TODO: to be able to chain this action
-          output['pulp_id'] = input['pulp_id']
+            # NG_TODO: to be able to chain this action
+            output['pulp_id'] = input['pulp_id']
+          end
         end
 
         def generate_importer

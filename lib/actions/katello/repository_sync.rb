@@ -18,10 +18,13 @@ module Actions
         param :id, Integer
       end
 
-
       def plan(repo)
-        sync_task_created = plan_action(Pulp::SyncTaskCreate, 'pulp_id' => repo.pulp_id)
-        plan_action(Pulp::TasksWait, 'tasks' => [sync_task_created.output])
+        sync_task_created = plan_action(Pulp::SyncTaskCreate,
+                                        'pulp_user' => User.current.pulp_user,
+                                        'pulp_id' => repo.pulp_id)
+        plan_action(Pulp::TasksWait,
+                    'pulp_user' => User.current.pulp_user,
+                    'tasks' => [sync_task_created.output])
         plan_self('id' => repo.id)
       end
 

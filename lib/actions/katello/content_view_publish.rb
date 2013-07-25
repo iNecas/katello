@@ -40,6 +40,7 @@ module Actions
             where(:environment_id => library.id).first
           content_ids = view.repos(library).select(&:enabled).map(&:content_id).uniq
           plan_action(Headpin::Candlepin::EnvironmentUpdate,
+                      'cp_user' => User.current.cp_user,
                       'cp_id' => view_cp_env.cp_id,
                       'content_ids' => content_ids)
         end

@@ -15,7 +15,10 @@ module Actions
     module Pulp
       class SyncTaskCreate < Dynflow::Action
 
+        include Helpers::PulpAction
+
         input_format do
+          param :pulp_user
           param :pulp_id, String
         end
 
@@ -24,14 +27,16 @@ module Actions
         end
 
         def run
-          sync_options = {}
-          sync_options[:max_speed] ||= ::Katello.config.pulp.sync_KBlimit if ::Katello.config.pulp.sync_KBlimit # set bandwidth limit
-          sync_options[:num_threads] ||= ::Katello.config.pulp.sync_threads if ::Katello.config.pulp.sync_threads # set threads per sync
-          pulp_tasks = Runcible::Extensions::Repository.sync(input['pulp_id'], {:override_config=>sync_options})
-          pulp_task = pulp_tasks.find do |task|
-            task['tags'].include?("pulp:action:sync")
+          as_pulp_user do
+            sync_options = {}
+            sync_options[:max_speed] ||= ::Katello.config.pulp.sync_KBlimit if ::Katello.config.pulp.sync_KBlimit # set bandwidth limit
+            sync_options[:num_threads] ||= ::Katello.config.pulp.sync_threads if ::Katello.config.pulp.sync_threads # set threads per sync
+            pulp_tasks = Runcible::Extensions::Repository.sync(input['pulp_id'], {:override_config=>sync_options})
+            pulp_task = pulp_tasks.find do |task|
+              task['tags'].include?("pulp:action:sync")
+            end
+            output['task_id'] = pulp_task['task_id']
           end
-          output['task_id'] = pulp_task['task_id']
         end
 
       end

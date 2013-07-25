@@ -24,6 +24,7 @@ module Actions
         repo.save!
 
         plan_action(Candlepin::ContentCreate,
+                    'cp_user' => User.current.cp_user,
                     'repo_id' => repo.id,
                     'environment_cp_id' => library.id,
                     'product_cp_id' => repo.product.cp_id,

@@ -15,7 +15,10 @@ module Actions
     module Candlepin
       class ContentCreate < Dynflow::Action
 
+        include Helpers::CandlepinAction
+
         input_format do
+          param :cp_user
           param :repository_id, Integer
           param :environment_cp_id, String
           param :product_cp_id, String
@@ -32,18 +35,21 @@ module Actions
         def plan(input)
           content_created = plan_self(input)
           plan_action(Candlepin::ContentAddToProduct,
+                      'cp_user'       => User.current.cp_user,
                       'product_cp_id' => input['product_cp_id'],
                       'content_cp_id' => content_created.output['cp_id'])
         end
 
         def run
-          content = Resources::Candlepin::Content.create(:label => input['label'],
-                                                         :name => input['name'],
-                                                         :contentUrl => input['content_url'],
-                                                         :gpgUrl => input['gpg_url'],
-                                                         :type => "yum",
-                                                         :vendor => Provider::CUSTOM)
-          output['cp_id'] = content['id']
+          as_cp_user do
+            content = Resources::Candlepin::Content.create(:label => input['label'],
+                                                           :name => input['name'],
+                                                           :contentUrl => input['content_url'],
+                                                           :gpgUrl => input['gpg_url'],
+                                                           :type => "yum",
+                                                           :vendor => Provider::CUSTOM)
+            output['cp_id'] = content['id']
+          end
         end
 
         def finalize(*steps)

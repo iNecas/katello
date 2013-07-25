@@ -18,6 +18,7 @@ module Actions
         product.save!
 
         plan_action(Candlepin::ProductCreate,
+                    'cp_user' => User.current.cp_user,
                     'product_id' => product.id,
                     'name' => product.name,
                     'multiplier' => product.multiplier)

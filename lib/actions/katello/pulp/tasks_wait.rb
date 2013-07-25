@@ -15,7 +15,10 @@ module Actions
     module Pulp
       class TasksWait < Dynflow::Action
 
+        include Helpers::PulpAction
+
         input_format do
+          param :pulp_user
           param :tasks, Array do
             param :task_id
           end
@@ -28,18 +31,20 @@ module Actions
         end
 
         def run
-          pending_task_ids = input['tasks'].map { |task| task['task_id'] }
-          pulp_task = nil
+          as_pulp_user do
+            pending_task_ids = input['tasks'].map { |task| task['task_id'] }
+            pulp_task = nil
 
-          while pending_task_ids.any?
-            task_id = pending_task_ids.first
-            pulp_task = Runcible::Resources::Task.poll(task_id)
-            if pulp_task[:finish_time]
-              pending_task_ids.shift
+            while pending_task_ids.any?
+              task_id = pending_task_ids.first
+              pulp_task = Runcible::Resources::Task.poll(task_id)
+              if pulp_task[:finish_time]
+                pending_task_ids.shift
+              end
             end
-          end
 
-          output['finish_time'] = Time.now.to_s
+            output['finish_time'] = Time.now.to_s
+          end
         end
 
       end

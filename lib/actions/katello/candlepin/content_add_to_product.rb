@@ -16,14 +16,19 @@ module Actions
     module Candlepin
       class ContentAddToProduct < Dynflow::Action
 
+        include Helpers::CandlepinAction
+
         input_format do
+          param :cp_user
           param :product_cp_id, String
           param :content_cp_id
         end
 
         def run
-          Resources::Candlepin::Product.add_content(input['product_cp_id'],
-                                                    input['content_cp_id'], true)
+          as_cp_user do
+            Resources::Candlepin::Product.add_content(input['product_cp_id'],
+                                                      input['content_cp_id'], true)
+          end
         end
 
       end

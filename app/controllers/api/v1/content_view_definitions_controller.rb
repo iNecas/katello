@@ -125,8 +125,7 @@ class Api::V1::ContentViewDefinitionsController < Api::V1::ApiController
                            :content_view_definition => @definition,
                            :organization => @definition.organization)
 
-    # NG_TODO: should be async
-    execution = sync_action(::Actions::Katello::ContentViewPublish, view)
+    async_action(::Actions::Katello::ContentViewPublish, view)
     respond :resource => @definition
     # NG_TODO: api handling tasks proprly
     #respond_for_async :resource => task

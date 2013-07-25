@@ -189,6 +189,6 @@ FastGettext.default_text_domain = 'katello'
 
 if defined? Dynflow
   require 'katello/bus'
-  Dir[File.join(Rails.root,'lib/actions/{elastic_search,katello,headpin}/**/*.rb')].each { |f| require f }
+  Dir[File.join(Rails.root,'lib/actions/{helpers,elastic_search,katello,headpin}/**/*.rb')].each { |f| require f }
 end
 

@@ -19,6 +19,7 @@ module Actions
 
         sequence do
           plan_action(Candlepin::OwnerCreate,
+                      'cp_user' => User.current.cp_user,
                       'name' => organization.name,
                       'label' => organization.label)
           plan_action(LibraryCreate, organization.library)

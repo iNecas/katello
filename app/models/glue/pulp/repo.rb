@@ -368,8 +368,8 @@ module Glue::Pulp::Repo
 
     # NG_TODO: what options are good for?
     def sync(options = { })
-      # NG_TODO: should be async
-      Katello::Bus.sync.trigger(Actions::Katello::RepositorySync, self)
+      # this should be moved into controller to pass the task id to user
+      Katello::Bus.async.trigger(Actions::Katello::RepositorySync, self).wait
     end
 
     # NG_TODO: this method seems to be unused

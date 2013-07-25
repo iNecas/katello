@@ -16,7 +16,10 @@ module Actions
     module Pulp
       class RepositoryGenerateMetadata < Dynflow::Action
 
+        include Helpers::PulpAction
+
         input_format do
+          param :pulp_user
           # NG_TODO: close this into nested hash just because
           # we might chain it with RepositoryCreate
           param :repo, Hash do
@@ -31,10 +34,12 @@ module Actions
         end
 
         def run
-          pulp_id = input['repo']['pulp_id']
-          tasks = Runcible::Extensions::Repository.publish_all(pulp_id)
+          as_pulp_user do
+            pulp_id = input['repo']['pulp_id']
+            tasks = Runcible::Extensions::Repository.publish_all(pulp_id)
 
-          output['tasks'] = tasks.map { |t| { 'task_id' => t['task_id']} }
+            output['tasks'] = tasks.map { |t| { 'task_id' => t['task_id']} }
+          end
         end
       end
     end

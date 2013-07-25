@@ -111,7 +111,11 @@ class Api::ApiController < ActionController::Base
 
 
   def sync_action(*args)
-    Katello::Bus.sync.trigger(*args)
+    async_action(*args).wait
+  end
+
+  def async_action(*args)
+    Katello::Bus.async.trigger(*args)
   end
 
 end
