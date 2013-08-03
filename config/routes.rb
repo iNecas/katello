@@ -10,7 +10,7 @@ Src::Application.routes.draw do
       User.current = User.first
     end
 
-    set :bus, Katello::Bus.persisted
+    set :world, Katello::Bus.persisted
   end
 
   mount dynflow_console => "/dynflow"

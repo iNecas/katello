@@ -6,7 +6,8 @@ module Katello
     end
 
     def self.persisted
-      @persisted ||= Dynflow::Bus::ActiveRecordBus.new
+      persistence_adapter = Dynflow::PersistenceAdapters::ActiveRecord.new
+      @persisted ||= Dynflow::SimpleWorld.new(persistence_adapter: persistence_adapter)
     end
 
   end

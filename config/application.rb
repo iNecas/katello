@@ -14,6 +14,11 @@ require 'katello/load_configuration'
 require 'katello/logging'
 require 'katello/url_constrained_cookie_store'
 
+require 'katello/bus'
+require 'dynflow'
+require 'dynflow/persistence_adapters/active_record'
+
+
 # If you have a Gemfile, require the gems listed there, including any gems
 # you've limited to :test, :development, or :production.
 if File.exist?(File.expand_path('../../Gemfile.in', __FILE__))
@@ -145,7 +150,7 @@ module Src
     config.logger = Logging.logger['app']
     config.active_record.logger = Logging.logger['sql']
 
-    config.paths['db/migrate'] += [Dynflow::Bus::ActiveRecordBus.migrations_path]
+    Dynflow::PersistenceAdapters::ActiveRecord.bootstrap_migrations(self)
 
     config.assets.enabled = true
     config.assets.version = '1.0'
@@ -187,8 +192,5 @@ FastGettext.add_text_domain('katello', {
 
 FastGettext.default_text_domain = 'katello'
 
-if defined? Dynflow
-  require 'katello/bus'
-  Dir[File.join(Rails.root,'lib/actions/{helpers,elastic_search,katello,headpin}/**/*.rb')].each { |f| require f }
-end
-
+require 'katello/bus'
+Dir[File.join(Rails.root,'lib/actions/{helpers,elastic_search,katello,headpin}/**/*.rb')].each { |f| require f }

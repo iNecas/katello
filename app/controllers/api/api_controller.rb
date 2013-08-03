@@ -111,7 +111,8 @@ class Api::ApiController < ActionController::Base
 
 
   def sync_action(*args)
-    async_action(*args).wait
+    id, plan = async_action(*args)
+    plan.wait
   end
 
   def async_action(*args)

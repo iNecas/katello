@@ -15,7 +15,7 @@ module Actions
     class RepositoryClone < Dynflow::Action
 
       input_format do
-        param :tasks, Pulp::TasksWait.output
+        param :tasks, Pulp::TasksWait.output_format
       end
 
       def plan(repo, to_env, content_view)
