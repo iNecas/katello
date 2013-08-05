@@ -65,8 +65,9 @@ class Api::V1::ContentViewsController < Api::V1::ApiController
   param :id, :identifier, :desc => "content view id"
   param :environment_id, :identifier, :desc => "environment promoting to"
   def promote
-    task = @view.promote_via_changeset(@environment)
-    respond_for_async :resource => task
+    # NG_TODO: do this properly (no content is really promoted for now, only cp environment)
+    task_id, _ = async_action(::Actions::Headpin::ContentViewPromote, @view, @environment)
+    render :json => { task_id: task_id }
   end
 
   api :POST, "/content_views/:id/refresh", "Refresh a content view"

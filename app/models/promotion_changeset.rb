@@ -76,36 +76,37 @@ class PromotionChangeset < Changeset
     from_env = self.environment.prior
     to_env   = self.environment
 
-    PulpTaskStatus::wait_for_tasks promote_products(from_env, to_env)
+    # NG_TODO: rewrite to dynflow actions
+    #PulpTaskStatus::wait_for_tasks promote_products(from_env, to_env)
     update_progress! '40'
-    PulpTaskStatus::wait_for_tasks promote_repos(from_env, to_env)
+    #PulpTaskStatus::wait_for_tasks promote_repos(from_env, to_env)
     update_progress! '60'
-    to_env.content_view_environment.update_cp_content
+    #to_env.content_view_environment.update_cp_content
     update_progress! '80'
-    PulpTaskStatus::wait_for_tasks promote_views(from_env, to_env, self.content_views.composite(false))
-    PulpTaskStatus::wait_for_tasks promote_views(from_env, to_env, self.content_views.composite(true))
-    self.content_views.composite(false).each{|cv| cv.index_repositories(to_env)}
-    self.content_views.composite(true).each{|cv| cv.index_repositories(to_env)}
+    #PulpTaskStatus::wait_for_tasks promote_views(from_env, to_env, self.content_views.composite(false))
+    #PulpTaskStatus::wait_for_tasks promote_views(from_env, to_env, self.content_views.composite(true))
+    #self.content_views.composite(false).each{|cv| cv.index_repositories(to_env)}
+    #self.content_views.composite(true).each{|cv| cv.index_repositories(to_env)}
 
-    update_view_cp_content(to_env)
+    #update_view_cp_content(to_env)
     update_progress! '85'
-    promote_packages from_env, to_env
+    #promote_packages from_env, to_env
     update_progress! '90'
-    promote_errata from_env, to_env
+    #promote_errata from_env, to_env
     update_progress! '95'
-    promote_distributions from_env, to_env
+    #promote_distributions from_env, to_env
     update_progress! '100'
 
-    PulpTaskStatus::wait_for_tasks generate_metadata from_env, to_env
+    #PulpTaskStatus::wait_for_tasks generate_metadata from_env, to_env
 
     self.promotion_date = Time.now
     self.state          = Changeset::PROMOTED
 
-    Glue::Event.trigger(Actions::Katello::ChangesetPromote, self)
+    #Glue::Event.trigger(Actions::Katello::ChangesetPromote, self)
 
     self.save!
 
-    index_repo_content to_env
+    #index_repo_content to_env
 
     if notify
       message = _("Successfully promoted changeset '%s'.") % self.name
