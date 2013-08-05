@@ -46,6 +46,7 @@ Src::Application.routes.draw do
 
           resource :packages, :action => [:create, :update, :destroy], :controller => :system_group_packages
           resources :errata, :only => [:index, :create], :controller => :system_group_errata
+          resources :subscriptions, :only => [:create], :controller => :system_group_subscriptions
         end
 
         resources :environments do
