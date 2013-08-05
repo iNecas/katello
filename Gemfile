@@ -77,7 +77,5 @@ Dir[File.expand_path('bundler.d/*.rb', File.dirname(__FILE__))].each do |bundle|
 end
 
 gem 'justified', :require => 'justified/standard_error'
-#gem 'dynflow', '>= 0.1.0', :git => 'git://github.com/iNecas/dynflow'
-gem 'dynflow', :path => '/home/inecas/Projects/dynflow'
-#gem 'apipie-params', :path => '/home/inecas/Projects/apipie-params'
+gem 'dynflow', :git => 'https://github.com/iNecas/dynflow.git', :branch => "kafo"
 gem 'sinatra' # we use the dynflow web console

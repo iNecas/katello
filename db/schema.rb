@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130613090036) do
+ActiveRecord::Schema.define(:version => 20130724145900) do
 
   create_table "activation_keys", :force => true do |t|
     t.string   "name"
@@ -262,27 +262,23 @@ ActiveRecord::Schema.define(:version => 20130613090036) do
   add_index "distributors", ["content_view_id"], :name => "index_distributors_on_content_view_id"
   add_index "distributors", ["environment_id"], :name => "index_distributors_on_environment_id"
 
-  create_table "dynflow_ar_persisted_plans", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "status"
-    t.text     "serialized_run_plan"
-    t.datetime "created_at",          :null => false
-    t.datetime "updated_at",          :null => false
-  end
-
-  add_index "dynflow_ar_persisted_plans", ["status"], :name => "index_dynflow_ar_persisted_plans_on_status"
-  add_index "dynflow_ar_persisted_plans", ["user_id"], :name => "index_dynflow_ar_persisted_plans_on_user_id"
-
-  create_table "dynflow_ar_persisted_steps", :force => true do |t|
-    t.integer  "persisted_plan_id"
+  create_table "dynflow_actions", :force => true do |t|
+    t.string   "identification"
     t.text     "data"
-    t.string   "status"
-    t.datetime "created_at",        :null => false
-    t.datetime "updated_at",        :null => false
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
   end
 
-  add_index "dynflow_ar_persisted_steps", ["persisted_plan_id"], :name => "index_dynflow_ar_persisted_steps_on_persisted_plan_id"
-  add_index "dynflow_ar_persisted_steps", ["status"], :name => "index_dynflow_ar_persisted_steps_on_status"
+  add_index "dynflow_actions", ["identification"], :name => "index_dynflow_actions_on_identification", :unique => true
+
+  create_table "dynflow_execution_plans", :force => true do |t|
+    t.string   "identification"
+    t.text     "data"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+  end
+
+  add_index "dynflow_execution_plans", ["identification"], :name => "index_dynflow_execution_plans_on_identification", :unique => true
 
   create_table "environment_priors", :id => false, :force => true do |t|
     t.integer "environment_id"
@@ -559,7 +555,7 @@ ActiveRecord::Schema.define(:version => 20130613090036) do
     t.integer  "gpg_key_id"
     t.string   "cp_label"
     t.integer  "library_instance_id"
-    t.string   "content_id",                                    :null => false
+    t.string   "content_id"
     t.string   "arch",                    :default => "noarch", :null => false
     t.string   "label",                                         :null => false
     t.integer  "content_view_version_id",                       :null => false
