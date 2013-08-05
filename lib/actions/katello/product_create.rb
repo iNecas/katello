@@ -17,11 +17,16 @@ module Actions
       def plan(product)
         product.save!
 
-        plan_action(Candlepin::ProductCreate,
-                    'cp_user' => User.current.cp_user,
-                    'product_id' => product.id,
-                    'name' => product.name,
-                    'multiplier' => product.multiplier)
+        product_created = plan_action(Candlepin::ProductCreate,
+                                      'cp_user' => User.current.cp_user,
+                                      'product_id' => product.id,
+                                      'name' => product.name,
+                                      'multiplier' => product.multiplier)
+        plan_action(Candlepin::ProductToOrganization,
+                    :cp_user  => User.current.cp_user,
+                    :cp_id    => product_created.output[:cp_id],
+                    :cp_owner => product.organization.label)
+
         plan_action(ElasticSearch::IndexUpdate, product)
         plan_action(ElasticSearch::IndexUpdate, product.provider)
       end
