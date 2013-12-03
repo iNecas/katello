@@ -31,7 +31,6 @@ module Actions
   def self.eager_load!
     eager_load_paths.each do |load_path|
       # todo: does the reloading work now?x
-      matcher = %r[A.*/actions/(.*)\.rb\Z]
       Dir.glob("#{load_path}/**/*.rb").sort.each do |file|
         require_dependency file
       end
