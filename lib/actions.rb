@@ -16,7 +16,7 @@ module Actions
 
     @world = Actions::World.new(world_options).tap do |world|
       ActionDispatch::Reloader.to_prepare { world.reload! }
-      at_exit { @world.terminate!.wait }
+      at_exit { @world.terminate! }
     end
   end
 
