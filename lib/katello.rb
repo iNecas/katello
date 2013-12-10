@@ -33,12 +33,12 @@ require "monkeys/string_to_bool"
 # ENGINE: Re-enable after fixing migrations in Katello proper
 #require File.expand_path("../engines/fort/lib/fort", File.dirname(__FILE__))
 
-
 module Katello
 
   require "katello/app_config"
   require "katello/engine"
   require "katello/load_configuration"
   require "katello/logging"
+  require 'katello/middleware/silenced_logger.rb'
 
 end
