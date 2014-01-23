@@ -1,4 +1,3 @@
-#
 # Copyright 2013 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
@@ -10,14 +9,12 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-module Katello
+module Support
   module Actions
-    class RepositoryCreate < Dynflow::Action
-
-      def plan(repo)
-        # third party plugins can hook here to perform additional actions
+    module RemoteAction
+      def stub_remote_user
+        User.stubs(:current).returns mock('user', remote_id: 'user')
       end
-
     end
   end
 end

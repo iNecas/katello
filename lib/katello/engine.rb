@@ -4,6 +4,10 @@ module Katello
 
     isolate_namespace Katello
 
+    initializer 'katello.silenced_logger', :before => :build_middleware_stack do |app|
+      app.config.middleware.swap Rails::Rack::Logger, Katello::Middleware::SilencedLogger, {}
+    end
+
     initializer 'katello.mount_engine', :after => :build_middleware_stack do |app|
       app.routes_reloader.paths << "#{Katello::Engine.root}/config/routes/mount_engine.rb"
     end
@@ -17,6 +21,14 @@ module Katello
       # This way, it's possible to generate both Foreman bindings (when Katello is not loaded)
       # or just Katello bindings (when Katello loaded) the same way.
       Apipie.configuration.api_controllers_matcher = "#{Katello::Engine.root}/app/controllers/katello/api/v2/*.rb"
+    end
+
+    initializer "katello.register_actions" do |app|
+      ForemanTasks.dynflow.require!
+      action_paths = %W[#{Katello::Engine.root}/app/lib/actions
+                        #{Katello::Engine.root}/app/lib/headpin/actions
+                        #{Katello::Engine.root}/app/lib/katello/actions]
+      ForemanTasks.dynflow.config.eager_load_paths.concat(action_paths)
     end
 
     initializer "katello.load_app_instance_data" do |app|
