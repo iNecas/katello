@@ -22,10 +22,18 @@ module Actions
             Type! system, ::Katello::System
 
             action_subject(system, :packages => packages)
-            plan_action(Pulp::Consumer::ContentInstall,
-                        consumer_uuid: system.uuid,
-                        type:          'rpm',
-                        args:          packages)
+            if defined? Mcoflow::Actions::Package::Install
+              packages.each do |package|
+                plan_action(Mcoflow::Actions::Package::Install,
+                            hostname:      system.name,
+                            package:       package)
+              end
+            else
+              plan_action(Pulp::Consumer::ContentInstall,
+                          consumer_uuid: system.uuid,
+                          type:          'rpm',
+                          args:          packages)
+            end
           end
 
           def humanized_name
