@@ -1,0 +1,18 @@
+<section ng-hide="system.readonly">
+  <h1 translate>ORCHESTRATE ALL THE THINGS</h1>
+  <section>
+    <form ng-submit="orchestrate()" role="form" class="row">
+
+      <div class="input-group">
+        <textarea ng-model="template" style="width: 50em; height: 20em;" class="form-control"
+                  placeholder="{{ 'WHAT THINGS?' | translate}}">
+        </textarea>
+
+      </div>
+
+      <span class="input-group-btn">
+        <button class="btn btn-default" translate>ORCHESTRATE</button>
+      </span>
+    </form>
+  </section>
+</section>
