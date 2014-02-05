@@ -41,7 +41,7 @@ module Actions
           end
 
           def humanized_input
-            [input[:packages].join(", ")] + super
+            [input[:packages].map(&:to_s).join(", ")] + super
           end
 
           def presenter

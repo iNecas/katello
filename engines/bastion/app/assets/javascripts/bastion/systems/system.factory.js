@@ -27,6 +27,7 @@ angular.module('Bastion.systems').factory('System',
 
         return $resource(Routes.apiSystemsPath() + '/:id/:action/:action2', {id: '@uuid'}, {
             get: {method: 'GET', params: {fields: 'full'}},
+            orchestrate: {method: 'POST', params: {action: 'orchestrate'}},
             update: {method: 'PUT'},
             query: {method: 'GET', isArray: false},
             releaseVersions: {method: 'GET', params: {action: 'releases'}},

@@ -147,6 +147,10 @@ Katello::Engine.routes.draw do
       end
 
       api_resources :systems, :only => [] do
+
+        member do
+          post :orchestrate
+        end
         collection do
           match '/bulk/add_system_groups' => 'systems_bulk_actions#bulk_add_system_groups', :via => :put
           match '/bulk/remove_system_groups' => 'systems_bulk_actions#bulk_remove_system_groups', :via => :put

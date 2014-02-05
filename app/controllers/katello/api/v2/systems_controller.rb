@@ -28,7 +28,7 @@ class Api::V2::SystemsController < Api::V2::ApiController
                                         :upload_package_profile, :errata, :package_profile, :subscribe,
                                         :unsubscribe, :subscriptions, :pools, :enabled_repos, :releases,
                                         :available_system_groups, :add_system_groups, :remove_system_groups,
-                                        :refresh_subscriptions, :checkin,
+                                        :refresh_subscriptions, :checkin, :orchestrate,
                                         :subscription_status, :tasks] # TODO: this should probably be :except
   before_filter :find_content_view, :only => [:create, :update]
 
@@ -60,6 +60,7 @@ class Api::V2::SystemsController < Api::V2::ApiController
     {
         :new                              => register_system,
         :create                           => register_system,
+        :orchestrate                      => edit_system,
         :hypervisors_update               => consumer_only,
         :regenerate_identity_certificates => edit_system,
         :update                           => edit_system,
@@ -177,6 +178,12 @@ class Api::V2::SystemsController < Api::V2::ApiController
     @system.update_attributes!(system_params(params))
 
     respond_for_update
+  end
+
+  def orchestrate
+    plan     = MultiJson.load(params[:template])
+    task     = async_task(::Actions::Katello::System::Orchestrate, @system, plan)
+    respond_for_async :resource => task
   end
 
   api :GET, "/systems/:id", "Show a system"

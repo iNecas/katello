@@ -52,6 +52,20 @@ module Actions
         end
 
       end
+
+      class DelegatedPresenters < Base
+
+        def initialize(action)
+          @delegated_actions = action.all_actions.find_all do |subaction|
+            action != subaction && subaction.respond_to?(:presenter)
+          end
+        end
+
+        def humanized_output
+          @delegated_actions.map(&:humanized_output).join("\n")
+        end
+
+      end
     end
   end
 end

@@ -217,6 +217,13 @@ angular.module('Bastion.systems').config(['$stateProvider', function ($stateProv
         templateUrl: 'systems/content/views/system-packages.html'
     });
 
+    $stateProvider.state('systems.details.orchestrate', {
+        url: '/orchestrate/',
+        collapsed: true,
+        controller: 'SystemOrchestrateController',
+        templateUrl: 'systems/content/views/system-orchestrate.html'
+    });
+
 
     $stateProvider.state('systems.details.errata', {
         abstract: true,
