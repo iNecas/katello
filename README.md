@@ -1,6 +1,6 @@
 # Katello [![Build Status](https://travis-ci.org/Katello/katello.png?branch=master)](https://travis-ci.org/Katello/katello)
 
-Full documentation is at http://katello.github.io/katello
+Full documentation is at http://katello.github.io/katello.
 
 ## About
 
