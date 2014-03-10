@@ -29,14 +29,14 @@ angular.module('Bastion.content-views').controller('ContentViewPublishController
 
         $scope.version = {};
 
-        $scope.publish = function (contentView, version) {
-            ContentView.publish({id: contentView.id, version: version}, success, failure);
+        $scope.publish = function (contentView) {
+            ContentView.publish(contentView, success, failure);
         };
 
-        function success(version) {
-            $scope.contentView.versions.unshift(version);
-            $scope.$parent.successMessages = [gettext('Successfully published new version.')];
-            $scope.transitionTo('content-views.details.versions', {contentViewId: version['content_view'].id});
+        function success(task) {
+            $scope.reloadVersions();
+            $scope.transitionTo('content-views.details.tasks.details',
+                                {contentViewId: $scope.contentView.id, taskId: task.id});
         }
 
         function failure(response) {

@@ -16,6 +16,7 @@ class ContentViewVersion < Katello::Model
 
   include AsyncOrchestration
   include Authorization::ContentViewVersion
+  include ForemanTasks::Concerns::ActionSubject
 
   belongs_to :content_view, :class_name => "Katello::ContentView", :inverse_of => :content_view_versions
   has_many :content_view_environments, :class_name => "Katello::ContentViewEnvironment",
@@ -264,6 +265,10 @@ class ContentViewVersion < Katello::Model
       env = content_view.add_environment(env, self)
       ForemanTasks.sync_task(::Actions::Katello::ContentView::EnvironmentCreate, env)
     end
+  end
+
+  def related_resources
+    self.content_view
   end
 
   private

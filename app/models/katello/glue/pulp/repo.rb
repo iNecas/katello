@@ -690,12 +690,12 @@ module Glue::Pulp::Repo
       # If this repository is for an 'archive', it doesn't need to be
       # published using the node distributor.
       if !self.archive? && self.find_node_distributor
-        if options[:node_publish_async]
-          self.async(:organization => self.organization,
-                     :task_type => TaskStatus::TYPES[:content_view_node_publish][:type]).publish_node_distributor
-        else
-          tasks << self.publish_node_distributor
-        end
+        # TODO: make async
+        # if options[:node_publish_async]
+        #   self.async(:organization => self.organization,
+        #              :task_type => TaskStatus::TYPES[:content_view_node_publish][:type]).publish_node_distributor
+        # else
+        tasks << self.publish_node_distributor
       end
 
       tasks

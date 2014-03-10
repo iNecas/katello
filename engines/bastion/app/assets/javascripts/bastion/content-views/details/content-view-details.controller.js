@@ -17,6 +17,7 @@
  *
  * @requires $scope
  * @requires ContentView
+ * @requires ContentViewVersion
  * @requires gettext
  *
  * @description
@@ -25,13 +26,23 @@
  *   within the table.
  */
 angular.module('Bastion.content-views').controller('ContentViewDetailsController',
-    ['$scope', 'ContentView', 'gettext',
-    function ($scope, ContentView, gettext) {
+    ['$scope', 'ContentView', 'ContentViewVersion', 'gettext',
+    function ($scope, ContentView, ContentViewVersion, gettext) {
 
         $scope.successMessages = [];
         $scope.errorMessages = [];
 
         $scope.contentView = ContentView.get({id: $scope.$stateParams.contentViewId});
+
+        $scope.reloadVersions = function () {
+            var contentViewId = $scope.contentView.id || $scope.$stateParams.contentViewId;
+            ContentViewVersion.query({'content_view_id': contentViewId}, function (data) {
+                $scope.versions = data.results;
+                if($scope.contentView) {
+                    $scope.contentView.versions = data.results;
+                }
+            });
+        };
 
         $scope.save = function (contentView) {
             return contentView.$update(saveSuccess, saveError);

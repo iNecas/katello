@@ -17,7 +17,6 @@
  *
  * @requires $scope
  * @requires gettext
- * @requires ContentViewVersion
  *
  * @description
  *   Provides the functionality specific to ContentViews for use with the Nutupane UI pattern.
@@ -25,13 +24,11 @@
  *   within the table.
  */
 angular.module('Bastion.content-views').controller('ContentViewVersionsController',
-    ['$scope', 'gettext', 'ContentViewVersion', function ($scope, gettext, ContentViewVersion) {
+    ['$scope', 'gettext', function ($scope, gettext) {
 
         $scope.table = {};
 
-        ContentViewVersion.query({'content_view_id': $scope.$stateParams.contentViewId}, function (data) {
-            $scope.versions = data.results;
-        });
+        $scope.reloadVersions();
 
         $scope.status = function (version) {
             var count = version['active_history'].length,

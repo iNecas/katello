@@ -72,9 +72,10 @@
         </a>
       </li>
 
-      <li ng-class="{active: isState('content-views.details.history')}">
-        <a ui-sref="content-views.details.history" translate>
-          History
+      <li ng-class="{active: stateIncludes('content-views.details.tasks')}">
+        <a translate
+           ui-sref="content-views.details.tasks.index({contentViewId: contentView.id})">
+          Tasks
         </a>
       </li>
 
