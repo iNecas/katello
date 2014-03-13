@@ -695,7 +695,7 @@ module Glue::Pulp::Repo
         #   self.async(:organization => self.organization,
         #              :task_type => TaskStatus::TYPES[:content_view_node_publish][:type]).publish_node_distributor
         # else
-        tasks << self.publish_node_distributor
+        self.publish_node_distributor
       end
 
       tasks
