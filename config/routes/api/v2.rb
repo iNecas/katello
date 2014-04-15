@@ -129,6 +129,7 @@ Katello::Engine.routes.draw do
       api_resources :products, :only => [:index, :show, :create, :update, :destroy] do
         api_resources :repository_sets, :only => [:index, :show] do
           member do
+            get :available_repositories
             put :enable
             put :disable
           end
@@ -142,17 +143,12 @@ Katello::Engine.routes.draw do
           post :product_create
           get :products
           put :refresh_manifest
-          put :refresh_products
         end
       end
 
       api_resources :puppet_modules, :only => [:index, :show]
 
       api_resources :repositories, :only => [:index, :create, :show, :destroy, :update] do
-        member do
-          put :enable
-          put :disable
-        end
         collection do
           post :sync_complete
         end

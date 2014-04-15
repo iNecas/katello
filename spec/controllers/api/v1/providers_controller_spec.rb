@@ -197,33 +197,5 @@ describe Api::V1::ProvidersController do
 
   end
 
-  describe "refresh products (katello)" do
-
-    let(:action) { :refresh_products }
-    let(:req) { post :refresh_products, { :id => @provider.id.to_s } }
-    let(:authorized_user) { user_with_write_permissions }
-    let(:unauthorized_user) { user_without_write_permissions }
-    it_should_behave_like "protected action"
-
-    describe "" do
-      before(:each) do
-        @redhat_provider = @organization.redhat_provider
-        Provider.stubs(:find).with(@redhat_provider.id.to_s.to_s).returns(@redhat_provider)
-      end
-
-      it "should refresh all the engineering products of the provider" do
-        @redhat_provider.expects(:refresh_products).once
-        post :refresh_products, { :id => @organization.redhat_provider.id.to_s }
-        must_respond_with(:success)
-      end
-
-      it "should fail for no-red-hat provider" do
-        @organization.redhat_provider.expects(:refresh_products).never
-        post :refresh_products, { :id => @provider.id.to_s }
-        must_respond_with(400)
-      end
-    end
-  end
-
 end
 end

@@ -22,7 +22,7 @@ class Api::V1::ProvidersController < Api::V1::ApiController
 
   before_filter :find_organization, :only => [:index, :create]
   before_filter :find_provider, :only => [:show, :update, :destroy, :products, :import_products,
-                                          :refresh_products, :import_manifest, :delete_manifest, :product_create,
+                                          :import_manifest, :delete_manifest, :product_create,
                                           :import_manifest_progress, :refresh_manifest]
   before_filter :authorize
 
@@ -45,7 +45,6 @@ class Api::V1::ProvidersController < Api::V1::ApiController
         :refresh_manifest         => edit_test,
         :delete_manifest          => edit_test,
         :import_products          => edit_test,
-        :refresh_products         => edit_test,
         :product_create           => edit_test
     }
   end
@@ -180,15 +179,6 @@ class Api::V1::ProvidersController < Api::V1::ApiController
 
     @provider.delete_manifest
     respond_for_status :message => _("Manifest deleted")
-  end
-
-  api :POST, "/providers/:id/refresh_products", "Refresh products for Red Hat provider"
-  param :id, :number, :desc => "Provider numeric identifier", :required => true
-  def refresh_products
-    fail HttpErrors::BadRequest, _("Products cannot be refreshed for custom provider.") unless @provider.redhat_provider?
-
-    @provider.refresh_products
-    respond_for_status :message => _("Products refreshed from CDN")
   end
 
   api :POST, "/providers/:id/import_products", "Import products"
