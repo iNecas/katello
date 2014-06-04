@@ -91,9 +91,8 @@ module Katello
     api :DELETE, "/products/:id", N_("Destroy a product")
     param :id, :number, :desc => N_("product numeric identifier")
     def destroy
-      @product.destroy
-
-      respond
+      sync_task(::Actions::Katello::Product::Destroy, @product)
+      respond_for_destroy
     end
 
     api :POST, "/products/:id/sync", "Sync a repository"
