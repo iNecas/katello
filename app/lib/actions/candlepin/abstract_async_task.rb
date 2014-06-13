@@ -12,16 +12,24 @@
 
 module Actions
   module Candlepin
-    module Product
-      class DeleteSubscriptions < Candlepin::AbstractAsyncTask
-        input_format do
-          param :organization_label
-          param :cp_id
-        end
+    class AbstractAsyncTask < Candlepin::Abstract
+      include Actions::Base::Polling
 
-        def invoke_external_task
-          ::Katello::Resources::Candlepin::Product.delete_subscriptions(input[:organization_label], input[:cp_id])
+      def run(event = nil)
+        # do nothing when the action is being skipped
+        unless event == Dynflow::Action::Skip
+          super
         end
+      end
+
+      def done?
+        ! ::Katello::Resources::Candlepin::Job.not_finished?(external_task)
+      end
+
+      private
+
+      def poll_external_task
+        ::Katello::Resources::Candlepin::Job.get(external_task[:id])
       end
     end
   end
