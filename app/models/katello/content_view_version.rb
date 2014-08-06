@@ -134,21 +134,6 @@ class ContentViewVersion < Katello::Model
         self.content_view.versions.in_environment(from_env).count > 1
   end
 
-  def trigger_contents_changed(options = {})
-    repos_changed = options[:non_archive] ? non_archive_repos : repositories.reload
-
-    Repository.trigger_contents_changed(repos_changed, :wait => true, :reindex => true,
-                                        :cloned_repo_overrides => options.fetch(:cloned_repo_overrides, []))
-
-    envs_changed = if options[:non_archive]
-                     content_view_puppet_environments.non_archived
-                   else
-                     content_view_puppet_environments.reload
-                   end
-
-    ContentViewPuppetEnvironment.trigger_contents_changed(envs_changed, :wait => true, :reindex => true)
-  end
-
   def archive_puppet_environment
     content_view_puppet_environments.archived.first
   end
