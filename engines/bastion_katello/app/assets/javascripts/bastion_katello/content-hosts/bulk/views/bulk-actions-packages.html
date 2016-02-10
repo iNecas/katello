@@ -5,23 +5,24 @@
     <h4 translate>Content Host Package Management</h4>
 
 
-    <form id="packageActionForm" name="systemContentForm" class="form" ng-hide="content.workingMode || denied('edit_content_hosts', contentHost)">
+    <form id="packageActionForm" name="packageActionForm" class="form" method="post"
+          action="/katello/remote_execution" ng-hide="content.workingMode || denied('edit_content_hosts', contentHost)">
 
       <div>
-        <input type="hidden" name="name"/>
-        <input type="hidden" name="remote_action"/>
-        <input type="hidden" name="scoped_search"/>
-        <input type="hidden" name="host_ids"/>
-        <input type="hidden" name="authenticity_token"/>
-        <input type="hidden" name="customize"/>
-        <input type="radio"
+        <input type="hidden" name="name" ng-value="content.content"/>
+        <input type="hidden" name="remote_action" value="{{packageActionFormValues.remoteAction}}"/>
+        <input type="hidden" name="scoped_search" ng-value="packageActionFormValues.search"/>
+        <input type="hidden" name="host_ids" ng-value="packageActionFormValues.ids"/>
+        <input type="hidden" name="authenticity_token" ng-value="packageActionFormValues.authenticityToken"/>
+        <input type="hidden" name="customize" ng-value="packageActionFormValues.customize"/>
+        <input id="package" type="radio"
                ng-model="content.contentType"
                ng-change="updatePlaceholder(content.contentType)"
                ng-disabled="content.confirm"
                value="package"/>
         <label for="package" translate>Package</label>
 
-        <input type="radio"
+        <input id="package_group" type="radio"
                ng-model="content.contentType"
                ng-change="updatePlaceholder(content.contentType)"
                ng-disabled="content.confirm"
@@ -45,12 +46,12 @@
                   translate
                   ng-hide="denied('edit_content_hosts', contentHost)"
                   ng-click="confirmContentAction('install', content)"
-                  ng-disabled="(table.numSelected === 0) || !systemContentForm.$valid || content.confirm">
+                  ng-disabled="(table.numSelected === 0) || !packageActionForm.$valid || content.confirm">
             Install
           </button>
           <button class="btn btn-default dropdown-toggle"
                   ng-hide="!remoteExecutionPresent"
-                  ng-disabled="(table.numSelected === 0) || !systemContentForm.$valid || content.confirm"
+                  ng-disabled="(table.numSelected === 0) || !packageActionForm.$valid || content.confirm"
                   type="button" id="use-remote-execution" data-toggle="dropdown">
             <span class="caret"></span>
           </button>
@@ -66,13 +67,13 @@
                   translate
                   ng-hide="denied('edit_content_hosts', contentHost)"
                   ng-click="confirmContentAction('update', content)"
-                  ng-disabled="(table.numSelected === 0) || !systemContentForm.$valid || content.confirm"
+                  ng-disabled="(table.numSelected === 0) || !packageActionForm.$valid || content.confirm"
                   ng-hide="content.contentType == 'errata'">
             Update
           </button>
           <button class="btn btn-default dropdown-toggle"
                   ng-hide="!remoteExecutionPresent || denied('edit_content_hosts', contentHost)"
-                  ng-disabled="(table.numSelected === 0) || !systemContentForm.$valid || content.confirm"
+                  ng-disabled="(table.numSelected === 0) || !packageActionForm.$valid || content.confirm"
                   type="button" id="use-remote-execution" data-toggle="dropdown">
             <span class="caret"></span>
           </button>
@@ -88,12 +89,12 @@
                   translate
                   ng-hide="content.contentType == 'errata' || denied('edit_content_hosts', contentHost)"
                   ng-click="confirmContentAction('remove', content)"
-                  ng-disabled="(table.numSelected === 0) || !systemContentForm.$valid || content.confirm">
+                  ng-disabled="(table.numSelected === 0) || !packageActionForm.$valid || content.confirm">
             Remove
           </button>
           <button class="btn btn-default dropdown-toggle"
                   ng-hide="!remoteExecutionPresent || denied('edit_content_hosts', contentHost)"
-                  ng-disabled="(table.numSelected === 0) || !systemContentForm.$valid || content.confirm"
+                  ng-disabled="(table.numSelected === 0) || !packageActionForm.$valid || content.confirm"
                   type="button" id="use-remote-execution" data-toggle="dropdown">
             <span class="caret"></span>
           </button>

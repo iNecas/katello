@@ -5,6 +5,7 @@
  * @requires $scope
  * @requires $q
  * @resource $location
+ * @resource $timeout
  * @requires HostBulkAction
  * @requires CurrentOrganization
  * @requires translate
@@ -14,8 +15,11 @@
  *   A controller for providing bulk action functionality to the content hosts page.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionPackagesController',
-    ['$scope', '$q', '$location', 'HostBulkAction', 'CurrentOrganization', 'translate', 'BastionConfig',
-    function ($scope, $q, $location, HostBulkAction, CurrentOrganization, translate, BastionConfig) {
+    ['$scope', '$q', '$location', '$timeout', 'HostBulkAction', 'CurrentOrganization', 'translate', 'BastionConfig',
+    function ($scope, $q, $location, $timeout, HostBulkAction, CurrentOrganization, translate, BastionConfig) {
+        $scope.packageActionFormValues = {
+            authenticityToken: AUTH_TOKEN.replace(/&quot;/g,'')
+        };
 
         function successMessage(type) {
             var messages = {
@@ -103,28 +107,28 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionPackag
         };
 
         $scope.performViaRemoteExecution = function(action, customize) {
-            var remoteAction, selectedHosts = $scope.nutupane.getAllSelectedResults();
+            var selectedHosts = $scope.nutupane.getAllSelectedResults();
+
             $scope.content.confirm = false;
+            $scope.packageActionFormValues.customize = customize;
 
             if (!action) {
                 action = $scope.content.action;
             }
 
             if ($scope.content.contentType === 'package_group') {
-                remoteAction = 'group_' + action;
+                $scope.packageActionFormValues.remoteAction = 'group_' + action;
             } else if ($scope.content.contentType === 'package') {
-                remoteAction = 'package_' + action;
+                $scope.packageActionFormValues.remoteAction = 'package_' + action;
             }
-            form = $('#packageActionForm');
-            form.attr('action', '/katello/remote_execution');
-            form.attr('method', 'post');
-            form.find('input[name=name]').val($scope.content.content);
-            form.find('input[name=remote_action]').val(remoteAction);
-            form.find('input[name=authenticity_token]').val(AUTH_TOKEN.replace(/&quot;/g,''));
-            form.find('input[name=customize]').val(customize || false);
-            form.find('input[name=host_ids]').val(selectedHosts.included.ids.join(','));
-            form.find('input[name=scoped_search]').val(selectedHosts.included.search);
-            form.submit();
+
+            $scope.packageActionFormValues.ids = selectedHosts.included.ids.join(',');
+            $scope.packageActionFormValues.search = selectedHosts.included.search;
+
+            $timeout(function () {
+                angular.element('#packageActionForm').submit();
+            }, 0);
+
         };
     }]
 );
