@@ -2,7 +2,6 @@
 
 require 'katello_test_helper'
 require 'support/host_support'
-require 'minitest/autorun'
 
 module Katello
   class ContentFacetHostExtensionsBaseTest < ActiveSupport::TestCase

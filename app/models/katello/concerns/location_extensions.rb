@@ -15,9 +15,7 @@ module Katello
       end
 
       def reset_settings
-        # changed? will be false after save, due to changes to the callbacks on
-        # rails 5.2, so instead it is compared to the last change
-        if self.title != self.title_before_last_save
+        if self.title_previously_changed? || self.title_changed?
           if ::Setting[:default_location_subscribed_hosts] == self.title_before_last_save
             ::Setting[:default_location_subscribed_hosts] = self.title
           end
