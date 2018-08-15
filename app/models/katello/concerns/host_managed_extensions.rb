@@ -82,8 +82,19 @@ module Katello
       end
 
       def content_and_puppet_matched?
-        content_facet && content_facet.content_view_id_was == environment.try(:content_view).try(:id) &&
-          content_facet.lifecycle_environment_id_was == self.environment.try(:lifecycle_environment).try(:id)
+        # IMPORTANT:
+        #
+        # Since rails 5.2, _before_last_save and _was exists on different stages
+        # of callback cycles the _was exists on "before_save", and
+        # "_before_last_save" "after_save" here the following method is called
+        # on both callback hooks, so it is validating both cases.
+        #
+        # Additional important thing to know, is that "_was" changes it's value
+        # after "save" was called, and it is pointing to the current value of
+        # that field, so just using the "_was" will trigger it's own issues.
+        content_facet &&
+          (content_facet.content_view_id_before_last_save || content_facet.content_view_id_was) == environment.try(:content_view).try(:id) &&
+          (content_facet.lifecycle_environment_id_before_last_save || content_facet.lifecycle_environment_id_was) == self.environment.try(:lifecycle_environment).try(:id)
       end
 
       def content_and_puppet_match?
